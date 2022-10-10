@@ -185,4 +185,3 @@ void printWinner(char winner)
     {
         printf("ITS A TIE!");
     }
-}
