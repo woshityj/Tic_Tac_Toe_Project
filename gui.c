@@ -1,4 +1,4 @@
-// gcc $( pkg-config --cflags gtk4 ) -o gui gui.c $( pkg-config --libs gtk4 )
+// gcc $( pkg-config --cflags gtk+-3.0 ) -o gui gui.c $( pkg-config --libs gtk+-3.0 )
 
 #include <gtk/gtk.h>
 #include <glib/gstdio.h>
@@ -26,6 +26,7 @@ activate (GtkApplication *app,
 
   /* Connect signal handlers to the constructed widgets. */
   GObject *window = gtk_builder_get_object (builder, "window");
+  gtk_window_set_default_size(GTK_WINDOW(window), 700, 500);
   gtk_window_set_application (GTK_WINDOW (window), app);
 
   GObject *button = gtk_builder_get_object (builder, "button1");
