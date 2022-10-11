@@ -2,8 +2,58 @@
 #include <stdlib.h>
 #include <ctype.h>
 #include <time.h>
+#include <gtk/gtk.h>
+#include <glib/gstdio.h>
 
-char board[3][3];
+GtkWidget       *window, *fixed1, *PVP, *PVC_Hard, *PVC_Easy, *quitbutton;
+GtkBuilder      *builder;
+
+static void pvp (GtkWidget *widget, gpointer data){
+    // need change gui_v2 into pvp and put .h files and .c files accordingly
+    // see https://stackoverflow.com/questions/31519449/c99-call-main-function-from-another-main#
+}
+
+static void pvc_hard (GtkWidget *widget, gpointer data){
+    // redirect to hard_mode, need put .h files and .c accordingly
+    // see https://stackoverflow.com/questions/31519449/c99-call-main-function-from-another-main#
+}
+
+static void pvc_easy (GtkWidget *widget, gpointer data){
+    // redirect to easy_mode, need put .h files and .c accordingly
+    // see https://stackoverflow.com/questions/31519449/c99-call-main-function-from-another-main#
+}
+
+static void quit (GtkWidget *widget, gpointer data){
+    // on a button click close the application
+    // see https://stackoverflow.com/questions/55981279/how-do-i-quit-a-gtk-application-from-a-button-click
+}
+
+int main (int argc, char *argv[]){
+    gtk_init(&argc, &argv);
+
+    builder = gtk_builder_new_from_file("Main_Menu.glade");
+
+    window = GTK_WIDGET(gtk_builder_get_object(builder, "window"));
+    fixed1 = GTK_WIDGET(gtk_builder_get_object(builder, "fixed1"));
+
+    PVP = GTK_WIDGET(gtk_builder_get_object(builder, "PVP")); //Goes to PVP Page
+    g_signal_connect (PVP, "clicked", G_CALLBACK (pvp), "");
+
+    PVC_Hard = GTK_WIDGET(gtk_builder_get_object(builder, "PVC_Hard")); // Goes to vs AI Page (Perfect Minimax Algorithm)
+    g_signal_connect (PVP, "clicked", G_CALLBACK (pvc_hard), "");
+
+    PVC_Easy = GTK_WIDGET(gtk_builder_get_object(builder, "PVC_Easy")); // Goes to vs AI Page (Imperfect Minimax Algorithm)
+    g_signal_connect (PVP, "clicked", G_CALLBACK (pvc_easy), "");
+
+    gtk_widget_show(window);
+    
+    gtk_main();
+
+    return EXIT_SUCCESS;
+}
+
+
+/* char board[3][3];
 const char PLAYER = 'X';
 const char COMPUTER = 'O';
 
@@ -185,4 +235,4 @@ void printWinner(char winner)
     {
         printf("ITS A TIE!");
     }
-}
+} */
