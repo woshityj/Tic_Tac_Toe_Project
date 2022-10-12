@@ -151,30 +151,54 @@ int checkFreeSpaces()
     return freeSpaces;
 }
 
-int minimax(int board[9], int player) {
+int minimax(int board[3][3], int player) {
     //How is the position like for player (their turn) on board?
     int winner = win(board);
     if(winner != 0) return winner*player;
 
-    int move = -1;
+    int row = -1;
+    int col = -1;
     int score = -2;//Losing moves are preferred to no move
-    int i;
-    for(i = 0; i < 9; ++i) {//For all moves,
-        if(board[i] == 0) {//If legal,
-            board[i] = player;//Try the move
+    int i, j;
+    for(i = 0; i < 3; ++i) {//For all rows,
+        for(j = 0; j < 3; ++j){//For all columns,
+            if(board[i][j] == ' ') {//If box is empty,
+            board[i][j] = player;//Try the move
             int thisScore = -minimax(board, player*-1);
             if(thisScore > score) {
                 score = thisScore;
-                move = i;
+                row = i;
+                col = j;
             }//Pick the one that's worst for the opponent
-            board[i] = 0;//Reset board after try
+            board[i][j] = 0;//Reset board after try
+        }
         }
     }
-    if(move == -1) return 0;
+    if(row == -1) return 0;
     return score;
 }
 
 static void computerMove (GtkWidget *widget, gpointer data)
 {
+    int row = -1;
+    int col = -1;
+    int score = -2;
+    int i, j;
+    for(i = 0; i < 3; ++i) {
+        for(j =0; j < 3; ++j){
+            if(board[i][j] == 0) {
+            board[i][j] = 1;
+            int tempScore = -minimax(board, -1);
+            board[i][j] = 0;
+            if(tempScore > score) {
+                score = tempScore;
+                row = i;
+                col = j;
+            }
+        }
+        }
+    }
+    //returns a score based on minimax tree at a given node.
+    board[row][col] = 1; // computer move
     printBoard();
 }
