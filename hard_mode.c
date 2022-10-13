@@ -12,7 +12,7 @@ GtkBuilder      *builder;
 char board[3][3]; //2D Array for Tic Tac Toe Backend
 const char PLAYER = 'X';
 const char COMPUTER = 'O';
-int turncounter = 0;
+unsigned int turncounter;
 
 static void printBoard()
 {
@@ -84,17 +84,8 @@ static void playerMove (GtkWidget *widget, gpointer data)
         printf("Invalid Move!\n");
         return;
     }
-
-    if (turncounter % 2 == 0 || turncounter == 0) 
-    {
-        board[row][column] = PLAYER;
-        gtk_button_set_label(GTK_BUTTON(widget), "X");
-    }
-    else if (turncounter % 2 == 1)
-    {
-        board[row][column] = COMPUTER;
-        gtk_button_set_label(GTK_BUTTON(widget), "O");
-    }
+    board[row][column] = PLAYER;
+    gtk_button_set_label(GTK_BUTTON(widget), "X");
     
     printBoard();
     turncounter += 1;
@@ -189,29 +180,68 @@ int minimax(char board[3][3], int player) {
     return score;
 }
 
-static void computerMove (GtkWidget *widget)
-{
+static void computerMove() {
     int row = -1;
     int col = -1;
     int score = -2;
     int i, j;
     for(i = 0; i < 3; ++i) {
         for(j =0; j < 3; ++j){
-            if(board[i][j] == 0) {
-            board[i][j] = 1;
-            int tempScore = -minimax(board, -1);
-            board[i][j] = 0;
-            if(tempScore > score) {
-                score = tempScore;
-                row = i;
-                col = j;
-            }
+            if(board[i][j] == ' ') {
+                board[i][j] = COMPUTER;
+                int tempScore = -minimax(board, -1);
+                board[i][j] = ' ';
+                if(tempScore > score) {
+                    score = tempScore;
+                    row = i;
+                    col = j;
+                }
         }
         }
     }
     //returns a score based on minimax tree at a given node.
     board[row][col] = COMPUTER; // computer move
-    gtk_button_set_label(GTK_BUTTON(widget),"O");
+    switch (row){
+        case 0:
+            switch (col){
+                case 0:
+                    gtk_button_set_label(GTK_BUTTON(button1),"O");
+                    break;
+                case 1:
+                    gtk_button_set_label(GTK_BUTTON(button2),"O");
+                    break;
+                case 2:
+                    gtk_button_set_label(GTK_BUTTON(button3),"O");
+                    break;
+            }
+            break;
+        case 1:
+            switch (col){
+                case 0:
+                    gtk_button_set_label(GTK_BUTTON(button4),"O");
+                    break;
+                case 1:
+                    gtk_button_set_label(GTK_BUTTON(button5),"O");
+                    break;
+                case 2:
+                    gtk_button_set_label(GTK_BUTTON(button6),"O");
+                    break;
+            }
+            break;
+        case 2:
+            switch (col){
+                case 0:
+                    gtk_button_set_label(GTK_BUTTON(button7),"O");
+                    break;
+                case 1:
+                    gtk_button_set_label(GTK_BUTTON(button8),"O");
+                    break;
+                case 2:
+                    gtk_button_set_label(GTK_BUTTON(button9),"O");
+                    break;
+            }
+            break;
+    }
     printBoard();
 }
 
@@ -239,49 +269,40 @@ int main(int argc, char *argv[])
 
     g_signal_connect(window, "destroy", G_CALLBACK(gtk_main_quit), NULL);
     fixed1 = GTK_WIDGET(gtk_builder_get_object(builder, "fixed1"));
+    button1 = GTK_WIDGET(gtk_builder_get_object(builder, "button1"));
+    button2 = GTK_WIDGET(gtk_builder_get_object(builder, "button2"));
+    button3 = GTK_WIDGET(gtk_builder_get_object(builder, "button3"));
+    button4 = GTK_WIDGET(gtk_builder_get_object(builder, "button4"));
+    button5 = GTK_WIDGET(gtk_builder_get_object(builder, "button5"));
+    button6 = GTK_WIDGET(gtk_builder_get_object(builder, "button6"));
+    button7 = GTK_WIDGET(gtk_builder_get_object(builder, "button7"));
+    button8 = GTK_WIDGET(gtk_builder_get_object(builder, "button8"));
+    button9 = GTK_WIDGET(gtk_builder_get_object(builder, "button9"));
+    resetbutton = GTK_WIDGET(gtk_builder_get_object(builder, "resetbutton"));
+
+    g_signal_connect (resetbutton, "clicked", G_CALLBACK (resetBoard), NULL);
+
+    player1 = GTK_WIDGET(gtk_builder_get_object(builder, "player1"));
+    
+    gtk_widget_show(window);
 
     for (turncounter = 0; turncounter < 9 && win(board) == 0; ++turncounter){
-        if((turncounter) % 2 == 0){
-            computerMove(board);
+        if(turncounter > 1 && turncounter % 2 == 0){
+            computerMove();
         }
         else{
-            button1 = GTK_WIDGET(gtk_builder_get_object(builder, "button1"));
             g_signal_connect (button1, "clicked", G_CALLBACK (playerMove), "00");
-
-            button2 = GTK_WIDGET(gtk_builder_get_object(builder, "button2"));
             g_signal_connect (button2, "clicked", G_CALLBACK (playerMove), "01");
-            
-            button3 = GTK_WIDGET(gtk_builder_get_object(builder, "button3"));
             g_signal_connect (button3, "clicked", G_CALLBACK (playerMove), "02");
-            
-            button4 = GTK_WIDGET(gtk_builder_get_object(builder, "button4"));
             g_signal_connect (button4, "clicked", G_CALLBACK (playerMove), "10");
-
-            button5 = GTK_WIDGET(gtk_builder_get_object(builder, "button5"));
             g_signal_connect (button5, "clicked", G_CALLBACK (playerMove), "11");
-
-            button6 = GTK_WIDGET(gtk_builder_get_object(builder, "button6"));
             g_signal_connect (button6, "clicked", G_CALLBACK (playerMove), "12");
-
-            button7 = GTK_WIDGET(gtk_builder_get_object(builder, "button7"));
             g_signal_connect (button7, "clicked", G_CALLBACK (playerMove), "20");
-
-            button8 = GTK_WIDGET(gtk_builder_get_object(builder, "button8"));
             g_signal_connect (button8, "clicked", G_CALLBACK (playerMove), "21");
-
-            button9 = GTK_WIDGET(gtk_builder_get_object(builder, "button9"));
             g_signal_connect (button9, "clicked", G_CALLBACK (playerMove), "22");
         }
     }
 
-    resetbutton = GTK_WIDGET(gtk_builder_get_object(builder, "resetbutton"));
-    g_signal_connect (resetbutton, "clicked", G_CALLBACK (resetBoard), NULL);
-
-    player1 = GTK_WIDGET(gtk_builder_get_object(builder, "player1"));
-
-    gtk_widget_show(window);
-
     gtk_main();
-
     return EXIT_SUCCESS;
 }
