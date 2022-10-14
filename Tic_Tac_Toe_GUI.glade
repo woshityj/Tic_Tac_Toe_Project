@@ -149,6 +149,20 @@
           </packing>
         </child>
         <child>
+          <object class="GtkLabel" id="announce">
+            <property name="label" translatable="yes">Testing</property>
+            <property name="width-request">100</property>
+            <property name="height-request">100</property>
+            <property name="visible">True</property>
+            <property name="can-focus">True</property>
+            <property name="receives-default">True</property>
+          </object>
+          <packing>
+            <property name="x">160</property>
+            <property name="y">500</property>
+          </packing>
+        </child>
+        <child>
           <object class="GtkLabel" id="player1">
             <property name="width-request">100</property>
             <property name="height-request">40</property>

@@ -1,4 +1,7 @@
-// gcc $( pkg-config --cflags gtk+-3.0 ) -o gui_v2 gui_v2.c $( pkg-config --libs gtk+-3.0 )
+// gcc $( pkg-config --cflags gtk+-3.0 ) -o pvp pvp.c $( pkg-config --libs gtk+-3.0 )
+
+
+/* Player vs Player */
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -19,7 +22,10 @@ GtkWidget       *button7;
 GtkWidget       *button8;
 GtkWidget       *button9;
 GtkWidget       *resetbutton;
+GtkWidget       *announce;
 GtkWidget       *player1;
+GtkWidget       *score1;
+GtkWidget       *score2;
 GtkBuilder      *builder;
 
 // Global variables
@@ -28,20 +34,17 @@ const char PLAYER = 'X';
 const char COMPUTER = 'O';
 int turncounter = 0;
 
-static void printBoard()
-{
-    printf(" %c  | %c   | %c ", board[0][0], board[0][1], board[0][2]);
-    printf("\n--- | --- | --- \n ");
-    printf(" %c | %c   | %c ", board[1][0], board[1][1], board[1][2]);
-    printf("\n--- | --- | --- \n ");
-    printf(" %c | %c   | %c ", board[2][0], board[2][1], board[2][2]);
-    printf("\n--- | --- | --- \n ");
-    printf("\n");
-}
+int player_1_score = 0;
+int player_2_score = 0;
+
+/* Function Prototypes */
+static void printBoard();
+int win(char board[3][3]);
+void disableButtons();
 
 static void playerMove (GtkWidget *widget, gpointer data)
 {
-    int row, column;
+    int row, column, winner;
     if (strcmp(data, "00") == 0)
     {
         row = 0;
@@ -109,7 +112,36 @@ static void playerMove (GtkWidget *widget, gpointer data)
         board[row][column] = COMPUTER;
         gtk_button_set_label(GTK_BUTTON(widget), "O");
     }
+
+    /*
+        Check if there is a Winner, if there is a winner,
+        increase the winner's score by 1 and disable all buttons
+        on the Tic Tac Toe Board
+    */
     
+    winner = win(board);
+    if (winner == -1)
+    {
+        gtk_label_set_label(GTK_LABEL(announce), "Player 1 has won!");
+        player_1_score = player_1_score + 1;
+        gchar *display;
+        display = g_strdup_printf("%d", player_1_score);
+        gtk_label_set_label(GTK_LABEL(score1), display);
+        g_free(display);
+        disableButtons();
+    }
+    
+    if (winner == 1)
+    {
+        gtk_label_set_label(GTK_LABEL(announce), "Player 2 has won!");
+        player_2_score = player_2_score + 1;
+        gchar *display;
+        display = g_strdup_printf("%d", player_2_score);
+        gtk_label_set_label(GTK_LABEL(score2), display);
+        g_free(display);
+        disableButtons();
+    }
+
     printBoard();
     turncounter += 1;
 }
@@ -131,9 +163,22 @@ int checkFreeSpaces()
     return freeSpaces;
 }
 
+/* 
+    Function to reset the current Board, the function resets the
+    following things:
+    - int turncounter
+    - Labels of all the buttons
+    - Array of the board
+    - Player winner Announcement
+*/
+
 static void resetBoard()
 {
     memset(board, 0, sizeof(board));
+    turncounter = 0;
+
+    gtk_label_set_label(GTK_LABEL(announce), " ");
+
     gtk_button_set_label(GTK_BUTTON(button1), " ");
     gtk_button_set_label(GTK_BUTTON(button2), " ");
     gtk_button_set_label(GTK_BUTTON(button3), " ");
@@ -143,11 +188,21 @@ static void resetBoard()
     gtk_button_set_label(GTK_BUTTON(button7), " ");
     gtk_button_set_label(GTK_BUTTON(button8), " ");
     gtk_button_set_label(GTK_BUTTON(button9), " ");
+
+    gtk_widget_set_sensitive (button1, TRUE);
+    gtk_widget_set_sensitive (button2, TRUE);
+    gtk_widget_set_sensitive (button3, TRUE);
+    gtk_widget_set_sensitive (button4, TRUE);
+    gtk_widget_set_sensitive (button5, TRUE);
+    gtk_widget_set_sensitive (button6, TRUE);
+    gtk_widget_set_sensitive (button7, TRUE);
+    gtk_widget_set_sensitive (button8, TRUE);
+    gtk_widget_set_sensitive (button9, TRUE);
 }
 
 int main(int argc, char *argv[])
 {
-    gtk_init(&argc, &argv); //init Gtk
+    gtk_init(&argc, &argv);
 
     builder = gtk_builder_new_from_file("Tic_Tac_Toe_GUI.glade");
 
@@ -186,11 +241,90 @@ int main(int argc, char *argv[])
     resetbutton = GTK_WIDGET(gtk_builder_get_object(builder, "resetbutton"));
     g_signal_connect (resetbutton, "clicked", G_CALLBACK (resetBoard), NULL);
 
+    announce = GTK_WIDGET(gtk_builder_get_object(builder, "announce"));
+
     player1 = GTK_WIDGET(gtk_builder_get_object(builder, "player1"));
+
+    score1 = GTK_WIDGET(gtk_builder_get_object(builder, "score1"));
+
+    score2 = GTK_WIDGET(gtk_builder_get_object(builder, "score2"));
 
     gtk_widget_show(window);
 
     gtk_main();
 
     return EXIT_SUCCESS;
+}
+
+static void printBoard()
+{
+    printf(" %c  | %c   | %c ", board[0][0], board[0][1], board[0][2]);
+    printf("\n--- | --- | --- \n ");
+    printf(" %c | %c   | %c ", board[1][0], board[1][1], board[1][2]);
+    printf("\n--- | --- | --- \n ");
+    printf(" %c | %c   | %c ", board[2][0], board[2][1], board[2][2]);
+    printf("\n--- | --- | --- \n ");
+    printf("\n");
+}
+
+int win(char board[3][3]){
+    //Check rows
+    for (int row = 0; row < 3; ++row){
+        if (board[row][0] == board[row][1] && board[row][1] == board[row][2] && strlen(&board[row][0]) != 0){
+            if (board[row][0] == PLAYER){
+                return -1;
+            }
+            else if (board[row][0] == COMPUTER){
+                return 1;
+            }
+        }
+    }
+
+    //Check columns
+    for (int col = 0; col < 3; ++col){
+        if (board[0][col] == board[1][col] && board[1][col] == board[2][col] && strlen(&board[0][col]) != 0){
+            if (board[0][col] == PLAYER){
+                return -1;
+            }
+            else if (board[0][col] == COMPUTER){
+                return 1;
+            }
+        }
+    }
+
+    //Check diagonals
+    if (board[0][0] == board[1][1] && board[1][1] == board[2][2] && strlen(&board[0][0]) != 0){
+        if (board[0][0] == PLAYER){
+            return -1;
+        }
+        else if (board[0][0] == COMPUTER){
+            return 1;
+        }
+    }
+    else if (board[0][2] == board[1][1] && board[1][1] == board[2][0] && strlen(&board[0][2]) != 0){
+        if (board[0][0] == PLAYER){
+            return -1;
+        }
+        else if (board[0][0] == COMPUTER){
+            return 1;
+        }
+    }
+    return 0;
+}
+
+/*
+    Function to disable buttons on the Tic Tac Toe Board
+*/
+
+void disableButtons()
+{
+    gtk_widget_set_sensitive (button1, FALSE);
+    gtk_widget_set_sensitive (button2, FALSE);
+    gtk_widget_set_sensitive (button3, FALSE);
+    gtk_widget_set_sensitive (button4, FALSE);
+    gtk_widget_set_sensitive (button5, FALSE);
+    gtk_widget_set_sensitive (button6, FALSE);
+    gtk_widget_set_sensitive (button7, FALSE);
+    gtk_widget_set_sensitive (button8, FALSE);
+    gtk_widget_set_sensitive (button9, FALSE);
 }
