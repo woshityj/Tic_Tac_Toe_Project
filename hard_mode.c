@@ -9,18 +9,29 @@ GtkWidget       *window, *fixed1, *button1, *button2, *button3, *button4, *butto
 GtkBuilder      *builder;
 
 // Global variables
-char board[3][3]; //2D Array for Tic Tac Toe Backend
-const char PLAYER = 'X';
-const char COMPUTER = 'O';
+int board[3][3]; //2D Array for Tic Tac Toe Backend
+const int PLAYER = -1;
+const int COMPUTER = 1;
 unsigned int turncounter;
 
-static void printBoard()
+char intToChar(int i) {
+    switch(i) {
+        case -1:
+            return 'X';
+        case 0:
+            return ' ';
+        case 1:
+            return 'O';
+    }
+}
+
+static void printBoard(int board[3][3])
 {
-    printf(" %c  | %c   | %c ", board[0][0], board[0][1], board[0][2]);
+    printf(" %c   | %c  | %c ", intToChar(board[0][0]), intToChar(board[0][1]), intToChar(board[0][2]));
     printf("\n--- | --- | --- \n ");
-    printf(" %c | %c   | %c ", board[1][0], board[1][1], board[1][2]);
+    printf(" %c   | %c  | %c ", intToChar(board[1][0]), intToChar(board[1][1]), intToChar(board[1][2]));
     printf("\n--- | --- | --- \n ");
-    printf(" %c | %c   | %c ", board[2][0], board[2][1], board[2][2]);
+    printf(" %c   | %c  | %c ", intToChar(board[2][0]), intToChar(board[2][1]), intToChar(board[2][2]));
     printf("\n--- | --- | --- \n ");
     printf("\n");
 }
@@ -79,7 +90,7 @@ static void playerMove (GtkWidget *widget, gpointer data)
     If the position is occupied, it will output "Invalid Move!" in the terminal
     and return
     */
-    if (board[row][column] == 'X' || board[row][column] == 'O')
+    if (board[row][column] == 1 || board[row][column] == -1)
     {
         printf("Invalid Move!\n");
         return;
@@ -87,11 +98,11 @@ static void playerMove (GtkWidget *widget, gpointer data)
     board[row][column] = PLAYER;
     gtk_button_set_label(GTK_BUTTON(widget), "X");
     
-    printBoard();
+    printBoard(board);
     turncounter += 1;
 }
 
-int win(char board[3][3]){
+int win(int board[3][3]){
     //Check rows
     for (int row = 0; row < 3; ++row){
         if (board[row][0] == board[row][1] && board[row][1] == board[row][2]){
@@ -153,7 +164,7 @@ int checkFreeSpaces()
     return freeSpaces;
 }
 
-int minimax(char board[3][3], int player) {
+int minimax(int board[3][3], int player) {
     //How is the position like for player (their turn) on board?
     int winner = win(board);
     if(winner != 0) return winner*player;
@@ -164,7 +175,7 @@ int minimax(char board[3][3], int player) {
     int i, j;
     for(i = 0; i < 3; ++i) {//For all rows,
         for(j = 0; j < 3; ++j){//For all columns,
-            if(board[i][j] == ' ') {//If box is empty,
+            if(board[i][j] == 0) {//If box is empty,
             board[i][j] = player;//Try the move
             int thisScore = -minimax(board, player*-1);
             if(thisScore > score) {
@@ -186,11 +197,11 @@ static void computerMove() {
     int score = -2;
     int i, j;
     for(i = 0; i < 3; ++i) {
-        for(j =0; j < 3; ++j){
-            if(board[i][j] == ' ') {
+        for(j = 0; j < 3; ++j){
+            if(board[i][j] == 0) {
                 board[i][j] = COMPUTER;
                 int tempScore = -minimax(board, -1);
-                board[i][j] = ' ';
+                board[i][j] = 0;
                 if(tempScore > score) {
                     score = tempScore;
                     row = i;
@@ -242,7 +253,7 @@ static void computerMove() {
             }
             break;
     }
-    printBoard();
+    printBoard(board);
 }
 
 static void resetBoard()
@@ -261,6 +272,7 @@ static void resetBoard()
 
 int main(int argc, char *argv[])
 {
+    int board[3][3] = {{0,0,0},{0,0,0},{0,0,0}};
     gtk_init(&argc, &argv); //init Gtk
 
     builder = gtk_builder_new_from_file("Tic_Tac_Toe_GUI.glade");
@@ -278,31 +290,44 @@ int main(int argc, char *argv[])
     button7 = GTK_WIDGET(gtk_builder_get_object(builder, "button7"));
     button8 = GTK_WIDGET(gtk_builder_get_object(builder, "button8"));
     button9 = GTK_WIDGET(gtk_builder_get_object(builder, "button9"));
+    player1 = GTK_WIDGET(gtk_builder_get_object(builder, "player1"));
+    g_signal_connect (button1, "clicked", G_CALLBACK (playerMove), "00");
+    g_signal_connect (button2, "clicked", G_CALLBACK (playerMove), "01");
+    g_signal_connect (button3, "clicked", G_CALLBACK (playerMove), "02");
+    g_signal_connect (button4, "clicked", G_CALLBACK (playerMove), "10");
+    g_signal_connect (button5, "clicked", G_CALLBACK (playerMove), "11");
+    g_signal_connect (button6, "clicked", G_CALLBACK (playerMove), "12");
+    g_signal_connect (button7, "clicked", G_CALLBACK (playerMove), "20");
+    g_signal_connect (button8, "clicked", G_CALLBACK (playerMove), "21");
+    g_signal_connect (button9, "clicked", G_CALLBACK (playerMove), "22");
     resetbutton = GTK_WIDGET(gtk_builder_get_object(builder, "resetbutton"));
 
     g_signal_connect (resetbutton, "clicked", G_CALLBACK (resetBoard), NULL);
-
-    player1 = GTK_WIDGET(gtk_builder_get_object(builder, "player1"));
     
     gtk_widget_show(window);
 
     for (turncounter = 0; turncounter < 9 && win(board) == 0; ++turncounter){
-        if(turncounter > 1 && turncounter % 2 == 0){
+    printf("%d \n", turncounter);
+        if(turncounter % 2 == 1){
             computerMove();
         }
         else{
-            g_signal_connect (button1, "clicked", G_CALLBACK (playerMove), "00");
-            g_signal_connect (button2, "clicked", G_CALLBACK (playerMove), "01");
-            g_signal_connect (button3, "clicked", G_CALLBACK (playerMove), "02");
-            g_signal_connect (button4, "clicked", G_CALLBACK (playerMove), "10");
-            g_signal_connect (button5, "clicked", G_CALLBACK (playerMove), "11");
-            g_signal_connect (button6, "clicked", G_CALLBACK (playerMove), "12");
-            g_signal_connect (button7, "clicked", G_CALLBACK (playerMove), "20");
-            g_signal_connect (button8, "clicked", G_CALLBACK (playerMove), "21");
-            g_signal_connect (button9, "clicked", G_CALLBACK (playerMove), "22");
+            
         }
     }
-
+    switch(win(board)) {
+        case 0:
+            printf("A draw. How droll.\n");
+            break;
+        case 1:
+            printBoard(board);
+            printf("You lose.\n");
+            break;
+        case -1:
+            printf("You win. Inconceivable!\n");
+            break;
+    }
     gtk_main();
+
     return EXIT_SUCCESS;
 }
