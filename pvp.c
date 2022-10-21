@@ -28,10 +28,11 @@ GtkWidget       *score1;
 GtkWidget       *score2;
 GtkBuilder      *builder;
 
+#define PLAYER 'X'
+#define COMPUTER 'O'
+
 // Global variables
 char board[3][3]; //2D Array for Tic Tac Toe Backend
-const char PLAYER = 'X';
-const char COMPUTER = 'O';
 int turncounter = 0;
 
 int player_1_score = 0;
@@ -112,6 +113,10 @@ static void playerMove (GtkWidget *widget, gpointer data)
         board[row][column] = COMPUTER;
         gtk_button_set_label(GTK_BUTTON(widget), "O");
     }
+    printf("\nBoard[2][0]: %c", board[2][0]);
+    printf("\nBoard[1][1]: %c", board[1][1]);
+    printf("\nBoard[2][2]: %c", board[2][2]);
+    printf("\nRow: %d Column: %d\n", row, column);
 
     /*
         Check if there is a Winner, if there is a winner,
@@ -268,7 +273,9 @@ static void printBoard()
 }
 
 int win(char board[3][3]){
-    //Check rows
+    /* 
+    Check every row to see if there is a Winning Combination
+    */
     for (int row = 0; row < 3; ++row){
         if (board[row][0] == board[row][1] && board[row][1] == board[row][2] && strlen(&board[row][0]) != 0){
             if (board[row][0] == PLAYER){
@@ -280,7 +287,9 @@ int win(char board[3][3]){
         }
     }
 
-    //Check columns
+    /*
+    Check every column to see if there is a Winning Combination
+    */
     for (int col = 0; col < 3; ++col){
         if (board[0][col] == board[1][col] && board[1][col] == board[2][col] && strlen(&board[0][col]) != 0){
             if (board[0][col] == PLAYER){
@@ -292,23 +301,61 @@ int win(char board[3][3]){
         }
     }
 
-    //Check diagonals
-    if (board[0][0] == board[1][1] && board[1][1] == board[2][2] && strlen(&board[0][0]) != 0){
-        if (board[0][0] == PLAYER){
-            return -1;
-        }
-        else if (board[0][0] == COMPUTER){
-            return 1;
-        }
-    }
-    else if (board[0][2] == board[1][1] && board[1][1] == board[2][0] && strlen(&board[0][2]) != 0){
-        if (board[0][0] == PLAYER){
-            return -1;
-        }
-        else if (board[0][0] == COMPUTER){
-            return 1;
-        }
-    }
+    /*
+    Check Left-to-Right downward diagonally to see if there is a Winning Combination
+    */
+   int count = 0;
+   for (int col = 0; col < 3; ++col)
+   {
+       if (board[col][col] == PLAYER)
+       {
+           count = count + 1;
+       }
+       else if (board[col][col] == COMPUTER)
+       {
+           count = count - 1;
+       }
+       else
+       {
+           count = count + 0;
+       }
+   }
+   if (count == 3 || count == -3)
+   {
+       /*
+       Returns either 1 or -1 to declare the appropriate winner
+       */
+       return count / abs(count); 
+   }
+
+   
+    /*
+    Check Left-to-Right upward diagonally to see if there is a Winning Combination
+    */
+   count = 0;
+   for (int col = 0; col < 3; ++col)
+   {
+       if (board[col][2 - col] == PLAYER)
+       {
+           count = count + 1;
+       }
+       else if (board[col][2 - col] == COMPUTER)
+       {
+           count = count - 1;
+       }
+       else
+       {
+           count = count + 0;
+       }
+   }
+   if (count == 3 || count == -3)
+   {
+       /*
+       Returns either 1 or -1 to declare the appropriate winner
+       */
+       return count / abs(count);
+   }
+   
     return 0;
 }
 
