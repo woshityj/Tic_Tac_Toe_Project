@@ -34,18 +34,77 @@ GtkBuilder      *builder;
 // Global variables
 char board[3][3]; //2D Array for Tic Tac Toe Backend
 int turncounter = 0;
-
 int player_1_score = 0;
 int player_2_score = 0;
 
 /* Function Prototypes */
+static void playerMove (GtkWidget *widget, gpointer data);
+int checkFreeSpaces();
+static void resetBoard();
 static void printBoard();
-int win(char board[3][3]);
+int win (char board[3][3]);
 void disableButtons();
+int draw(int freeSpaces);
+
+int main(int argc, char *argv[])
+{
+    gtk_init(&argc, &argv);
+
+    builder = gtk_builder_new_from_file("Tic_Tac_Toe_GUI.glade");
+
+    window = GTK_WIDGET(gtk_builder_get_object(builder, "window"));
+
+    g_signal_connect(window, "destroy", G_CALLBACK(gtk_main_quit), NULL);
+
+    fixed1 = GTK_WIDGET(gtk_builder_get_object(builder, "fixed1"));
+    button1 = GTK_WIDGET(gtk_builder_get_object(builder, "button1"));
+    g_signal_connect (button1, "clicked", G_CALLBACK (playerMove), "00");
+
+    button2 = GTK_WIDGET(gtk_builder_get_object(builder, "button2"));
+    g_signal_connect (button2, "clicked", G_CALLBACK (playerMove), "01");
+    
+    button3 = GTK_WIDGET(gtk_builder_get_object(builder, "button3"));
+    g_signal_connect (button3, "clicked", G_CALLBACK (playerMove), "02");
+    
+    button4 = GTK_WIDGET(gtk_builder_get_object(builder, "button4"));
+    g_signal_connect (button4, "clicked", G_CALLBACK (playerMove), "10");
+
+    button5 = GTK_WIDGET(gtk_builder_get_object(builder, "button5"));
+    g_signal_connect (button5, "clicked", G_CALLBACK (playerMove), "11");
+
+    button6 = GTK_WIDGET(gtk_builder_get_object(builder, "button6"));
+    g_signal_connect (button6, "clicked", G_CALLBACK (playerMove), "12");
+
+    button7 = GTK_WIDGET(gtk_builder_get_object(builder, "button7"));
+    g_signal_connect (button7, "clicked", G_CALLBACK (playerMove), "20");
+
+    button8 = GTK_WIDGET(gtk_builder_get_object(builder, "button8"));
+    g_signal_connect (button8, "clicked", G_CALLBACK (playerMove), "21");
+
+    button9 = GTK_WIDGET(gtk_builder_get_object(builder, "button9"));
+    g_signal_connect (button9, "clicked", G_CALLBACK (playerMove), "22");
+
+    resetbutton = GTK_WIDGET(gtk_builder_get_object(builder, "resetbutton"));
+    g_signal_connect (resetbutton, "clicked", G_CALLBACK (resetBoard), NULL);
+
+    announce = GTK_WIDGET(gtk_builder_get_object(builder, "announce"));
+
+    player1 = GTK_WIDGET(gtk_builder_get_object(builder, "player1"));
+
+    score1 = GTK_WIDGET(gtk_builder_get_object(builder, "score1"));
+
+    score2 = GTK_WIDGET(gtk_builder_get_object(builder, "score2"));
+
+    gtk_widget_show(window);
+
+    gtk_main();
+
+    return EXIT_SUCCESS;
+}
 
 static void playerMove (GtkWidget *widget, gpointer data)
 {
-    int row, column, winner;
+    int row, column, check_winner, check_draw;
     if (strcmp(data, "00") == 0)
     {
         row = 0;
@@ -124,8 +183,8 @@ static void playerMove (GtkWidget *widget, gpointer data)
         on the Tic Tac Toe Board
     */
     
-    winner = win(board);
-    if (winner == -1)
+    check_winner = win(board);
+    if (check_winner == -1)
     {
         gtk_label_set_label(GTK_LABEL(announce), "Player 1 has won!");
         player_1_score = player_1_score + 1;
@@ -136,7 +195,7 @@ static void playerMove (GtkWidget *widget, gpointer data)
         disableButtons();
     }
     
-    if (winner == 1)
+    if (check_winner == 1)
     {
         gtk_label_set_label(GTK_LABEL(announce), "Player 2 has won!");
         player_2_score = player_2_score + 1;
@@ -144,6 +203,16 @@ static void playerMove (GtkWidget *widget, gpointer data)
         display = g_strdup_printf("%d", player_2_score);
         gtk_label_set_label(GTK_LABEL(score2), display);
         g_free(display);
+        disableButtons();
+    }
+
+    int spaces = checkFreeSpaces();
+    printf("\n%d", spaces);
+
+    check_draw = draw(checkFreeSpaces());
+    if (check_draw == 1 && check_winner == 0)
+    {
+        gtk_label_set_label(GTK_LABEL(announce), "It's a Draw!");
         disableButtons();
     }
 
@@ -159,7 +228,7 @@ int checkFreeSpaces()
     {
         for (int j = 0; j < 3; j++)
         {
-            if (board[i][j] != ' ')
+            if (strlen(&board[i][j]) != 0)
             {
                 freeSpaces--;
             }
@@ -203,62 +272,6 @@ static void resetBoard()
     gtk_widget_set_sensitive (button7, TRUE);
     gtk_widget_set_sensitive (button8, TRUE);
     gtk_widget_set_sensitive (button9, TRUE);
-}
-
-int main(int argc, char *argv[])
-{
-    gtk_init(&argc, &argv);
-
-    builder = gtk_builder_new_from_file("Tic_Tac_Toe_GUI.glade");
-
-    window = GTK_WIDGET(gtk_builder_get_object(builder, "window"));
-
-    g_signal_connect(window, "destroy", G_CALLBACK(gtk_main_quit), NULL);
-
-    fixed1 = GTK_WIDGET(gtk_builder_get_object(builder, "fixed1"));
-    button1 = GTK_WIDGET(gtk_builder_get_object(builder, "button1"));
-    g_signal_connect (button1, "clicked", G_CALLBACK (playerMove), "00");
-
-    button2 = GTK_WIDGET(gtk_builder_get_object(builder, "button2"));
-    g_signal_connect (button2, "clicked", G_CALLBACK (playerMove), "01");
-    
-    button3 = GTK_WIDGET(gtk_builder_get_object(builder, "button3"));
-    g_signal_connect (button3, "clicked", G_CALLBACK (playerMove), "02");
-    
-    button4 = GTK_WIDGET(gtk_builder_get_object(builder, "button4"));
-    g_signal_connect (button4, "clicked", G_CALLBACK (playerMove), "10");
-
-    button5 = GTK_WIDGET(gtk_builder_get_object(builder, "button5"));
-    g_signal_connect (button5, "clicked", G_CALLBACK (playerMove), "11");
-
-    button6 = GTK_WIDGET(gtk_builder_get_object(builder, "button6"));
-    g_signal_connect (button6, "clicked", G_CALLBACK (playerMove), "12");
-
-    button7 = GTK_WIDGET(gtk_builder_get_object(builder, "button7"));
-    g_signal_connect (button7, "clicked", G_CALLBACK (playerMove), "20");
-
-    button8 = GTK_WIDGET(gtk_builder_get_object(builder, "button8"));
-    g_signal_connect (button8, "clicked", G_CALLBACK (playerMove), "21");
-
-    button9 = GTK_WIDGET(gtk_builder_get_object(builder, "button9"));
-    g_signal_connect (button9, "clicked", G_CALLBACK (playerMove), "22");
-
-    resetbutton = GTK_WIDGET(gtk_builder_get_object(builder, "resetbutton"));
-    g_signal_connect (resetbutton, "clicked", G_CALLBACK (resetBoard), NULL);
-
-    announce = GTK_WIDGET(gtk_builder_get_object(builder, "announce"));
-
-    player1 = GTK_WIDGET(gtk_builder_get_object(builder, "player1"));
-
-    score1 = GTK_WIDGET(gtk_builder_get_object(builder, "score1"));
-
-    score2 = GTK_WIDGET(gtk_builder_get_object(builder, "score2"));
-
-    gtk_widget_show(window);
-
-    gtk_main();
-
-    return EXIT_SUCCESS;
 }
 
 static void printBoard()
@@ -355,7 +368,7 @@ int win(char board[3][3]){
        */
        return count / abs(count);
    }
-   
+
     return 0;
 }
 
@@ -374,4 +387,13 @@ void disableButtons()
     gtk_widget_set_sensitive (button7, FALSE);
     gtk_widget_set_sensitive (button8, FALSE);
     gtk_widget_set_sensitive (button9, FALSE);
+}
+
+int draw(int freeSpaces)
+{
+    if (freeSpaces == 0)
+    {
+        return 1;
+    }
+    return 0;
 }
