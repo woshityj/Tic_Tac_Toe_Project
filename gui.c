@@ -45,9 +45,14 @@ char board[3][3];
 int turncounter = 0;
 int player_1_score = 0;
 int player_2_score = 0;
+static int gamemode = 0;
+int bestMove[2] = {-1, -1};
 
 /* Function Prototypes */
+void initializeGUI();
+void changeGamemode(GtkWidget *widget, gpointer data);
 void playerMove(GtkWidget *widget, gpointer data);
+void computerMove();
 void announceWinner(int winner, int draw);
 int checkFreeSpaces();
 int draw(int freeSpaces);
@@ -55,17 +60,53 @@ void printBoard();
 int checkWinner();
 void resetBoard();
 void disableButtons();
+void destroy(GtkWidget *widget, gpointer data);
+int evaluate();
+int minimax(int depth, int isMax);
+void findBestMove();
+int max(int num1, int num2);
+int min(int num1, int num2);
 
 /* Main Functions */
 int main(int argc, char *argv[])
 {
     gtk_init(&argc, &argv);
+    initializeGUI();
+
+    
+    /* Test Case for MiniMax Algorithm */
+    // board[0][0] = PLAYER;
+    // board[0][1] = COMPUTER;
+    // board[0][2] = PLAYER;
+
+    // board[1][0] = COMPUTER;
+    // board[1][1] = COMPUTER;
+    // board[1][2] = PLAYER;
+
+    // findBestMove();
+    // printf("\n%d  %d", bestMove[0], bestMove[1]);
+    // printBoard();
+}
+
+void initializeGUI()
+{
 
     builder = gtk_builder_new_from_file("gui.glade");
 
     window = GTK_WIDGET(gtk_builder_get_object(builder, "window"));
 
     g_signal_connect(window, "destroy", G_CALLBACK(gtk_main_quit), NULL);
+
+    player_vs_player = GTK_WIDGET(gtk_builder_get_object(builder, "player_vs_player"));
+    g_signal_connect(player_vs_player, "clicked", G_CALLBACK(changeGamemode), "0");
+    player_vs_computer_easy = GTK_WIDGET(gtk_builder_get_object(builder, "player_vs_computer_easy"));
+    g_signal_connect(player_vs_computer_easy, "clicked", G_CALLBACK(changeGamemode), "1");
+    player_vs_computer_medium = GTK_WIDGET(gtk_builder_get_object(builder, "player_vs_computer_medium"));
+    g_signal_connect(player_vs_computer_medium, "clicked", G_CALLBACK(changeGamemode), "2");
+    player_vs_computer_hard = GTK_WIDGET(gtk_builder_get_object(builder, "player_vs_computer_hard"));
+    g_signal_connect(player_vs_computer_hard, "clicked", G_CALLBACK(changeGamemode), "3");
+    quit = GTK_WIDGET(gtk_builder_get_object(builder, "quit"));
+    g_signal_connect(quit, "clicked", G_CALLBACK(destroy), window);
 
     stackfixed1 = GTK_WIDGET(gtk_builder_get_object(builder, "stackfixed1"));
     
@@ -102,8 +143,32 @@ int main(int argc, char *argv[])
     gtk_widget_show(window);
 
     gtk_main();
+}
 
-    return EXIT_SUCCESS;
+void changeGamemode(GtkWidget *widget, gpointer data)
+{
+    char* ptr_gamemode = data;
+
+    if (*ptr_gamemode == '0')
+    {
+        gamemode = 0;
+        resetBoard();
+    }
+    else if (*ptr_gamemode == '1')
+    {
+        gamemode = 1;
+        resetBoard();
+    }
+    else if (*ptr_gamemode == '2')
+    {
+        gamemode = 2;
+        resetBoard();
+    }
+    else if (*ptr_gamemode == '3')
+    {
+        gamemode = 3;
+        resetBoard();
+    }
 }
 
 void playerMove(GtkWidget *widget, gpointer data)
@@ -119,23 +184,82 @@ void playerMove(GtkWidget *widget, gpointer data)
         return;
     }
 
-    if (turncounter % 2 == 0 || turncounter == 0)
+    if (gamemode == 0)
+    {
+        if (turncounter % 2 == 0 || turncounter == 0)
+        {
+            *ptr_board = PLAYER;
+            gtk_button_set_label(GTK_BUTTON(widget), "X");
+            turncounter = turncounter + 1;
+
+        }
+        else if (turncounter % 2 == 1 && gamemode == 0)
+        {
+            *ptr_board = COMPUTER;
+            gtk_button_set_label(GTK_BUTTON(widget), "O");
+            turncounter = turncounter + 1;
+        }
+    }
+
+    if (gamemode == 3)
     {
         *ptr_board = PLAYER;
         gtk_button_set_label(GTK_BUTTON(widget), "X");
-    }
-    else if (turncounter % 2 == 1)
-    {
-        *ptr_board = COMPUTER;
-        gtk_button_set_label(GTK_BUTTON(widget), "O");
+        turncounter = turncounter + 1;
+        computerMove();
+        turncounter = turncounter + 1;
     }
 
     check_winner = checkWinner();
     check_draw = draw(checkFreeSpaces());
     announceWinner(check_winner, check_draw);
 
-    turncounter = turncounter + 1;
     printBoard();
+}
+
+void computerMove()
+{
+    findBestMove();
+    int ai_row = bestMove[0];
+    int ai_column = bestMove[1];
+
+    board[ai_row][ai_column] = COMPUTER;
+    if (ai_row == 0 && ai_column == 0)
+    {
+        gtk_button_set_label(GTK_BUTTON(button1), "O");
+    }
+    else if (ai_row == 0 && ai_column == 1)
+    {
+        gtk_button_set_label(GTK_BUTTON(button2), "O");
+    }
+    else if (ai_row == 0 && ai_column == 2)
+    {
+        gtk_button_set_label(GTK_BUTTON(button3), "O");
+    }
+    else if (ai_row == 1 && ai_column == 0)
+    {
+        gtk_button_set_label(GTK_BUTTON(button4), "O");
+    }
+    else if (ai_row == 1 && ai_column == 1)
+    {
+        gtk_button_set_label(GTK_BUTTON(button5), "O");
+    }
+    else if (ai_row == 1 && ai_column == 2)
+    {
+        gtk_button_set_label(GTK_BUTTON(button6), "O");
+    }
+    else if (ai_row == 2 && ai_column == 0)
+    {
+        gtk_button_set_label(GTK_BUTTON(button7), "O");
+    }
+    else if (ai_row == 2 && ai_column == 1)
+    {
+        gtk_button_set_label(GTK_BUTTON(button8), "O");
+    }
+    else if (ai_row == 2 && ai_column == 2)
+    {
+        gtk_button_set_label(GTK_BUTTON(button9), "O");
+    }
 }
 
 void announceWinner(int winner, int draw)
@@ -333,4 +457,139 @@ void disableButtons()
     gtk_widget_set_sensitive (button7, FALSE);
     gtk_widget_set_sensitive (button8, FALSE);
     gtk_widget_set_sensitive (button9, FALSE);
+}
+
+void destroy(GtkWidget *widget, gpointer data)
+{
+    gtk_window_close(data);
+}
+
+int evaluate()
+{
+    int check_winner;
+    check_winner = checkWinner();
+    if (check_winner == -1)
+    {
+        return -10;
+    }
+    else if (check_winner == 1)
+    {
+        return +10;
+    }
+    else
+    {
+        return 0;
+    }
+
+}
+
+int minimax(int depth, int isMax)
+{
+    int score, spaces_left;
+
+    score = evaluate();
+    
+    if (score == 10)
+    {
+        return score;
+    }
+
+    if (score == -10)
+    {
+        return score;
+    }
+
+    spaces_left = checkFreeSpaces();
+    if (spaces_left == 0)
+    {
+        return 0;
+    }
+
+    if (isMax == 1)
+    {
+        int best = -1000;
+
+        for (int i = 0; i < 3; i++)
+        {
+            for (int j = 0; j < 3; j++)
+            {
+                if (strlen(&board[i][j]) == 0)
+                {
+                    board[i][j] = COMPUTER;
+
+                    best = max(best, minimax(depth + 1, !isMax));
+
+                    board[i][j] = 0;
+                }
+            }
+        }
+        return best;
+    }
+    else
+    {
+        int best = 1000;
+
+        for (int i = 0; i < 3; i++)
+        {
+            for (int j = 0; j < 3; j++)
+            {
+                if (strlen(&board[i][j]) == 0)
+                {
+                    board[i][j] = PLAYER;
+
+                    best = min(best, minimax(depth + 1, !isMax));
+
+                    board[i][j] = 0;
+                }
+            }
+        }
+        return best;
+    }
+}
+
+void findBestMove()
+{
+    int bestVal = -1000;
+
+    for (int i = 0; i < 3; i++)
+    {
+        for (int j = 0; j < 3; j++)
+        {
+            if (strlen(&board[i][j]) == 0)
+            {
+                board[i][j] = COMPUTER;
+
+                int moveVal = minimax(0, 0);
+
+                board[i][j] = 0;
+
+                if (moveVal > bestVal)
+                {
+                    bestMove[0] = i;
+                    bestMove[1] = j;
+                    bestVal = moveVal;
+                }
+            }
+        }
+    }
+
+    printf("The value of the best Move: %d\n\n", bestVal);
+}
+
+int max(int num1, int num2)
+{
+    if (num1 > num2)
+    {
+        return num1;
+    }
+    return num2;
+}
+
+int min(int num1, int num2)
+{
+    if (num1 < num2)
+    {
+        return num1;
+    }
+    return num2;
 }
