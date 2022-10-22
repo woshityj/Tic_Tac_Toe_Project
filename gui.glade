@@ -305,7 +305,7 @@
             <property name="height-request">40</property>
             <property name="visible">True</property>
             <property name="can-focus">False</property>
-            <property name="label" translatable="yes">Player 1 is the Winner!</property>
+            <property name="label" translatable="yes"></property>
             <attributes>
               <attribute name="font-desc" value="Sans Bold 10"/>
             </attributes>

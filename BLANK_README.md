@@ -30,28 +30,23 @@
 <!-- PROJECT LOGO -->
 <br />
 <div align="center">
-  <a href="https://github.com/woshityj/tic_tac_toe_project">
+  <a href="https://github.com/github_username/repo_name">
     <img src="images/logo.png" alt="Logo" width="80" height="80">
   </a>
 
-<h3 align="center">Tic Tac Toe for Autistic Kids</h3>
+<h3 align="center">project_title</h3>
 
   <p align="center">
-    The project is to design a Tic Tac Toe game on the memory and power limited IoT tablet
-    for autistic kids to develop the motor skill, social skill and initial stage of left brain
-    development of the fucking kids.
+    project_description
     <br />
-    To fulfill the objectives, the main task of the team is to develop the 3x3 Tic Tac Toe game in
-    C programming language.
-    <br />
-    <a href="https://github.com/woshityj/tic_tac_toe_project"><strong>Explore the docs »</strong></a>
+    <a href="https://github.com/github_username/repo_name"><strong>Explore the docs »</strong></a>
     <br />
     <br />
-    <a href="https://github.com/woshityj/tic_tac_toe_project">View Demo</a>
+    <a href="https://github.com/github_username/repo_name">View Demo</a>
     ·
-    <a href="https://github.com/woshityj/tic_tac_toe_project/issues">Report Bug</a>
+    <a href="https://github.com/github_username/repo_name/issues">Report Bug</a>
     ·
-    <a href="https://github.com/woshityj/tic_tac_toe_project/issues">Request Feature</a>
+    <a href="https://github.com/github_username/repo_name/issues">Request Feature</a>
   </p>
 </div>
 
@@ -97,7 +92,15 @@ Here's a blank template to get started: To avoid retyping too much info. Do a se
 
 
 ### Built With
-* [![C]]
+
+* [![Next][Next.js]][Next-url]
+* [![React][React.js]][React-url]
+* [![Vue][Vue.js]][Vue-url]
+* [![Angular][Angular.io]][Angular-url]
+* [![Svelte][Svelte.dev]][Svelte-url]
+* [![Laravel][Laravel.com]][Laravel-url]
+* [![Bootstrap][Bootstrap.com]][Bootstrap-url]
+* [![JQuery][JQuery.com]][JQuery-url]
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
@@ -106,41 +109,31 @@ Here's a blank template to get started: To avoid retyping too much info. Do a se
 <!-- GETTING STARTED -->
 ## Getting Started
 
+This is an example of how you may give instructions on setting up your project locally.
 To get a local copy up and running follow these simple example steps.
 
 ### Prerequisites
 
-These are the softwares and how to install them.
-* GTK 3.24.34
-  Windows
-  1. Download the MSYS2 Installer via the following link
-     https://www.msys2.org/
-  2. Install GTK 3 and its dependencies via the MSYS2 Shell
-     ```sh
-     pacman -S mingw-w64-x86_64-gtk3
-     ```
-
-  Mac OS
-  1. Install GTK 3 and its dependenices via the Terminal
+This is an example of how to list things you need to use the software and how to install them.
+* npm
   ```sh
-  brew install gtk+3
+  npm install npm@latest -g
   ```
 
 ### Installation
 
-1. Clone the repo
+1. Get a free API Key at [https://example.com](https://example.com)
+2. Clone the repo
    ```sh
-   git clone https://github.com/woshityj/tic_tac_toe_project.git
+   git clone https://github.com/github_username/repo_name.git
    ```
-2. Install GTK
-   https://www.gtk.org/
-3. Enter the following command in the terminal
+3. Install NPM packages
    ```sh
-   gcc $( pkg-config --cflags gtk+-3.0 ) -o game gui.c $( pkg-config --libs gtk+-3.0 )
+   npm install
    ```
-4. Run the game via the following exe
-   ```sh
-   ./main
+4. Enter your API in `config.js`
+   ```js
+   const API_KEY = 'ENTER YOUR API';
    ```
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
@@ -204,7 +197,7 @@ Distributed under the MIT License. See `LICENSE.txt` for more information.
 
 Your Name - [@twitter_handle](https://twitter.com/twitter_handle) - email@email_client.com
 
-Project Link: [https://github.com/woshityj/tic_tac_toe_project](https://github.com/github_username/repo_name)
+Project Link: [https://github.com/github_username/repo_name](https://github.com/github_username/repo_name)
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
@@ -223,7 +216,6 @@ Project Link: [https://github.com/woshityj/tic_tac_toe_project](https://github.c
 
 <!-- MARKDOWN LINKS & IMAGES -->
 <!-- https://www.markdownguide.org/basic-syntax/#reference-style-links -->
-[C]: https://img.shields.io/badge/c-%2300599C.svg?style=for-the-badge&logo=c&logoColor=white
 [contributors-shield]: https://img.shields.io/github/contributors/github_username/repo_name.svg?style=for-the-badge
 [contributors-url]: https://github.com/github_username/repo_name/graphs/contributors
 [forks-shield]: https://img.shields.io/github/forks/github_username/repo_name.svg?style=for-the-badge
