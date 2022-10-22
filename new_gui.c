@@ -48,7 +48,9 @@ int player_2_score = 0;
 
 /* Function Prototypes */
 void playerMove(GtkWidget *widget, gpointer data);
-void announceWinner(int winner);
+void announceWinner(int winner, int draw);
+int checkFreeSpaces();
+int draw(int freeSpaces);
 void printBoard();
 int checkWinner();
 void resetBoard();
@@ -129,13 +131,14 @@ void playerMove(GtkWidget *widget, gpointer data)
     }
 
     check_winner = checkWinner();
-    announceWinner(check_winner);
+    check_draw = draw(checkFreeSpaces());
+    announceWinner(check_winner, check_draw);
 
     turncounter = turncounter + 1;
     printBoard();
 }
 
-void announceWinner(int winner)
+void announceWinner(int winner, int draw)
 {
     if (winner == -1)
     {
@@ -157,6 +160,38 @@ void announceWinner(int winner)
         g_free(display);
         disableButtons();
     }
+    else if (draw == 1 && winner == 0)
+    {
+        gtk_label_set_label(GTK_LABEL(announce), "It's a Draw!");
+        disableButtons();
+    }
+}
+
+int checkFreeSpaces()
+{
+    int freeSpaces = 9;
+
+    for (int i = 0; i < 3; i++)
+    {
+        for (int j = 0; j < 3; j++)
+        {
+            if (strlen(&board[i][j]) != 0)
+            {
+                freeSpaces = freeSpaces - 1;
+            }
+        }
+    }
+
+    return freeSpaces;
+}
+
+int draw(int freeSpaces)
+{
+    if (freeSpaces == 0)
+    {
+        return 1;
+    }
+    return 0;
 }
 
 void printBoard()
@@ -208,11 +243,11 @@ int checkWinner()
     int count = 0;
     for (int col = 0; col < 3; ++col)
     {
-        if (board[col][col] == PLAYER)
+        if (board[col][col] == COMPUTER)
         {
             count = count + 1;
         }
-        else if (board[col][col] == COMPUTER)
+        else if (board[col][col] == PLAYER)
         {
             count = count - 1;
         }
@@ -235,11 +270,11 @@ int checkWinner()
     count = 0;
     for (int col = 0; col < 3; ++col)
     {
-        if (board[col][2 - col] == PLAYER)
+        if (board[col][2 - col] == COMPUTER)
         {
             count = count + 1;
         }
-        else if (board[col][2 - col] == COMPUTER)
+        else if (board[col][2 - col] == PLAYER)
         {
             count = count - 1;
         }
