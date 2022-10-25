@@ -167,6 +167,7 @@ void changeGamemode(GtkWidget *widget, gpointer data)
     else if (*ptr_gamemode == '3')
     {
         gamemode = 3;
+        gtk_label_set_label(GTK_LABEL(player2), "Computer (Hard)");
         resetBoard();
     }
 }
