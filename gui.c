@@ -4,6 +4,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <time.h>
 #include <gtk/gtk.h>
 #include <glib/gstdio.h>
 
@@ -47,6 +48,7 @@ int player_1_score = 0;
 int player_2_score = 0;
 static int gamemode = 0;
 int bestMove[2] = {-1, -1};
+float aiPercentage = 0;
 
 /* Function Prototypes */
 void initializeGUI();
@@ -66,12 +68,20 @@ int minimax(int depth, int isMax);
 void findBestMove();
 int max(int num1, int num2);
 int min(int num1, int num2);
+void setAIDifficulty();
+int getAIDecision();
+
+/* 
+    Set a random seed for the AI Probability Calculation for 
+    the AI's Difficulty
+ */
 
 /* Main Functions */
 int main(int argc, char *argv[])
-{
+{    
     gtk_init(&argc, &argv);
     initializeGUI();
+    srand(time(NULL));
 
     
     /* Test Case for MiniMax Algorithm */
@@ -157,16 +167,21 @@ void changeGamemode(GtkWidget *widget, gpointer data)
     else if (*ptr_gamemode == '1')
     {
         gamemode = 1;
+        setAIDifficulty();
+        gtk_label_set_label(GTK_LABEL(player2), "Computer (Easy)");
         resetBoard();
     }
     else if (*ptr_gamemode == '2')
     {
         gamemode = 2;
+        setAIDifficulty();
+        gtk_label_set_label(GTK_LABEL(player2), "Computer (Medium)");
         resetBoard();
     }
     else if (*ptr_gamemode == '3')
     {
         gamemode = 3;
+        setAIDifficulty();
         gtk_label_set_label(GTK_LABEL(player2), "Computer (Hard)");
         resetBoard();
     }
@@ -200,29 +215,54 @@ void playerMove(GtkWidget *widget, gpointer data)
             gtk_button_set_label(GTK_BUTTON(widget), "O");
             turncounter = turncounter + 1;
         }
+        check_winner = checkWinner();
+        check_draw = draw(checkFreeSpaces());
+        announceWinner(check_winner, check_draw);
     }
 
-    if (gamemode == 3)
+    if (gamemode == 1 || gamemode == 2 || gamemode == 3)
     {
         *ptr_board = PLAYER;
         gtk_button_set_label(GTK_BUTTON(widget), "X");
         turncounter = turncounter + 1;
-        computerMove();
-        turncounter = turncounter + 1;
-    }
+        check_winner = checkWinner();
+        check_draw = draw(checkFreeSpaces());
+        announceWinner(check_winner, check_draw);
 
-    check_winner = checkWinner();
-    check_draw = draw(checkFreeSpaces());
-    announceWinner(check_winner, check_draw);
+        if (check_winner == 0 && check_draw == 0)
+        {
+            computerMove();
+            turncounter = turncounter + 1;
+        }
+    }
 
     printBoard();
 }
 
 void computerMove()
 {
-    findBestMove();
-    int ai_row = bestMove[0];
-    int ai_column = bestMove[1];
+    int ai_decision = getAIDecision();
+    printf("\n%d", ai_decision);
+    int ai_row, ai_column;
+    int x, y;
+
+    if (ai_decision == 1)
+    {
+        findBestMove();
+        ai_row = bestMove[0];
+        ai_column = bestMove[1];
+    }
+    else if (ai_decision == 0)
+    {
+        do
+        {
+            x = rand() % 3;
+            y = rand() % 3;
+        } while (strlen(&board[x][y]) != 0);
+        
+        ai_row = x;
+        ai_column = y;
+    }
 
     board[ai_row][ai_column] = COMPUTER;
     if (ai_row == 0 && ai_column == 0)
@@ -593,4 +633,39 @@ int min(int num1, int num2)
         return num1;
     }
     return num2;
+}
+
+void setAIDifficulty()
+{
+    if (gamemode == 1)
+    {
+        aiPercentage = 0.0;
+    }
+    else if (gamemode == 2)
+    {
+        aiPercentage = 0.75;
+    }
+    else if (gamemode == 3)
+    {
+        aiPercentage = 1.0;
+    }
+    return;
+}
+
+/* Write a function to calculate the possibility of picking the MiniMax Best Move and a random move on the board */
+
+int getAIDecision()
+{
+    float value;
+    value = (float) rand() / RAND_MAX;
+    printf("\nRandomised Value is:");
+    printf("%f", value);
+
+    if (value <= aiPercentage)
+    {
+        printf("\n Best Move");
+        return 1; /* Return 1 indicates that AI uses MiniMax Algorithm */ 
+    }
+    printf("\n Not Best Move");
+    return 0; /* Return 0 indicates that AI uses a randomiser */
 }
