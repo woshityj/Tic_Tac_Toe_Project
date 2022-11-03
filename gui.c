@@ -233,6 +233,9 @@ void playerMove(GtkWidget *widget, gpointer data)
         {
             computerMove();
             turncounter = turncounter + 1;
+            check_winner = checkWinner();
+            check_draw = draw(checkFreeSpaces());
+            announceWinner(check_winner, check_draw);
         }
     }
 
