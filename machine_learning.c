@@ -7,13 +7,16 @@
 #define ARRAY_SIZE 958
 
 int board[ARRAY_SIZE][10];
+float weights[10] = {0,0,0,0,0,0,0,0,0,0};
+float learning_rate = 0.0042069;
 
-void shuffle(int array[], int length);
+void shuffle(int length);
 
 int main(void)
 {
     FILE *fptr;
     char line[MAX_LINE_LENGTH];
+    int row = 0, col = 0, player = -1, computer = 1, blank = 0;
 
     if ((fptr = fopen("tic-tac-toe.data", "r")) == NULL)
     {
@@ -23,7 +26,6 @@ int main(void)
 
     while(fgets(line, MAX_LINE_LENGTH, fptr))
     {
-        int row = 0, col = 0, player = 1, computer = -1, blank = 0;
         char *record;
         record = strtok(line,",");
         while(record != NULL)
@@ -31,15 +33,15 @@ int main(void)
             record[strcspn(record, "\n")] = '\0';
             if(strcmp(record,"x") == 0)
             {
-                board[row][col++] = 1;
+                board[row][col++] = player;
             }
             else if(strcmp(record,"o") == 0)
             {
-                board[row][col++] = -1;
+                board[row][col++] = computer;
             }
             else if(strcmp(record,"b") == 0)
             {
-                board[row][col++] = 0;
+                board[row][col++] = blank;
             }
             else if (strcmp(record,"positive") == 0)
             {
@@ -52,28 +54,45 @@ int main(void)
             record = strtok(NULL,",");
         }
         ++row;
+        col = 0;
     }
     fclose(fptr);
-    shuffle(board,ARRAY_SIZE);
-    for(int i = 0; i < ARRAY_SIZE; i++)
-    {
-        for(int j = 0; j < 10; j++)
-        {
-            
-        }
-    }
+    shuffle(ARRAY_SIZE);
+    
     return 0;
 }
 
-void shuffle(int array[], int length)
+void shuffle(int length)
 {
     srand(time(NULL));
 
     for(int i = 0; i < length; i++)
     {
         int swap_index = rand() % length;
-        int temp = array[i];
-        array[i] = array[swap_index];
-        array[swap_index] = temp;
+        for(int j = 0; j < 10; j++)
+        {
+            int temp = board[i][j];
+            board[i][j] = board[swap_index][j];
+            board[swap_index][j] = temp;
+        }
+    }
+}
+
+void regression(int row)
+{
+    float yest = 0;
+    for (int i = 0; i < 10; i++)
+    {
+        yest += weights[i] * board[row][i];
+    }
+}
+
+void updateWeights(int row)
+{
+    float y, yest;
+    int error = (1/ARRAY_SIZE)*(y-yest);
+    for (int i = 0; i < 10; i++)
+    {
+        weights[i] = weights[i] + (learning_rate*error*board[row][i]);
     }
 }
