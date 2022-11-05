@@ -4,20 +4,42 @@
 #include <time.h>
 
 #define MAX_LINE_LENGTH 1000
-#define ARRAY_SIZE 958
+#define MAX_SIZE 958
+#define TRAINING_SIZE 766
+#define TESTING_SIZE 192
 
-int board[ARRAY_SIZE][10];
+int board[MAX_SIZE][10];
+int training[TRAINING_SIZE][10];
+int testing[TESTING_SIZE][10];
 float weights[10] = {0,0,0,0,0,0,0,0,0,0};
 float learning_rate = 0.0042069;
 
+// Function prototypes
+void load_data();
 void shuffle(int length);
+void train_data();
+void split_data();
 
 int main(void)
 {
+    load_data();    //loads data into board array
+    shuffle(MAX_SIZE);
+    split_data();
+    for(int i = 0; i < TRAINING_SIZE; i++)
+    {
+        for(int j = 0; j < 10; j++)
+        {
+            printf("The row %d contains: %d\n",i ,training[i][j]);
+        }
+    }
+    return 0;
+}
+
+void load_data()
+{
     FILE *fptr;
     char line[MAX_LINE_LENGTH];
-    int row = 0, col = 0, player = -1, computer = 1, blank = 0;
-
+    int row = 0, col = 0, player = -1, computer = 1, blank = 0;;
     if ((fptr = fopen("tic-tac-toe.data", "r")) == NULL)
     {
         printf("Error opening file!");
@@ -57,9 +79,30 @@ int main(void)
         col = 0;
     }
     fclose(fptr);
-    shuffle(ARRAY_SIZE);
-    
-    return 0;
+}
+
+void split_data()
+{
+    int k1 = 0, k2 = 0;
+    for(int i = 0; i < MAX_SIZE; i++)
+    {
+        if(i < TRAINING_SIZE)
+        {
+            for(int j = 0; j < 10; j++)
+            {
+                training[k1][j] = board[i][j];
+            }
+            k1++;
+        }
+        else
+        {
+            for (int j = 0; j < 10; j++)
+            {
+                testing[k2][j] = board[i][j];
+            }
+            k2++;
+        }
+    }
 }
 
 void shuffle(int length)
@@ -78,21 +121,24 @@ void shuffle(int length)
     }
 }
 
-void regression(int row)
+void train_data(int row)
 {
     float yest = 0;
+    float error[10];
+    float y = training[row][10];
     for (int i = 0; i < 10; i++)
     {
-        yest += weights[i] * board[row][i];
+        yest += weights[i] * training[row][i];
     }
+    float errory = (1/TRAINING_SIZE)*((y-yest)*(y-yest));
 }
 
 void updateWeights(int row)
 {
     float y, yest;
-    int error = (1/ARRAY_SIZE)*(y-yest);
+    int error = (1/MAX_SIZE)*(y-yest);
     for (int i = 0; i < 10; i++)
     {
-        weights[i] = weights[i] + (learning_rate*error*board[row][i]);
+        weights[i] = weights[i] + (learning_rate*error*training[row][i]);
     }
 }
