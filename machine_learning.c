@@ -40,13 +40,6 @@ int main(void)
     {
         printf("weight %d is %lf\n",i,weights[i]);
     }
-/*     for(int i = 0; i < TRAINING_SIZE; i++)
-    {
-        for(int j = 0; j < 10; j++)
-        {
-            printf("The row %d contains: %d\n",i ,training[i][j]);
-        }
-    } */
     return 0;
 }
 
