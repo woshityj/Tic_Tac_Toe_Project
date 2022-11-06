@@ -11,28 +11,35 @@
 int board[MAX_SIZE][10];
 int training[TRAINING_SIZE][10];
 int testing[TESTING_SIZE][10];
-float weights[10] = {0,0,0,0,0,0,0,0,0,0};
+float weights[9] = {0,0,0,0,0,0,0,0,0};
 float error[10];
-float learning_rate = 0.0042069;
-float y, yest;
+float learning_rate = 0.5;
 
 // Function prototypes
 void load_data();
 void shuffle(int length);
-void train_data();
 void split_data();
+void train_data();
 void updateWeights(int row);
 
 int main(void)
 {
     load_data();    //loads data into board array
-    shuffle(MAX_SIZE);
-    split_data();
+    shuffle(MAX_SIZE); //shuffles the data into random order
+    split_data(); //splits the data into training and testing data
     for (int i = 0; i < TRAINING_SIZE; i++)
     {
         train_data(i);
+        updateWeights(i);
+        for (int j = 0; j < 10; j++)
+        {
+            printf("weight %d is %lf\n",j,weights[j]);
+        }
     }
-    
+    for (int i = 0; i < 10; i++)
+    {
+        printf("weight %d is %lf\n",i,weights[i]);
+    }
 /*     for(int i = 0; i < TRAINING_SIZE; i++)
     {
         for(int j = 0; j < 10; j++)
@@ -131,30 +138,33 @@ void shuffle(int length)
 
 void train_data(int row)
 {
-    y = training[row][9];
+    float y= training[row][9]; 
+    float yest = 0;
     for (int i = 0; i < 9; i++)
     {
         yest += weights[i] * training[row][i];
     }
 
+    float errory = y - yest;
+
     for (int j = 0; j < 10; j++)
     {
         if(j != 9)
         {
-            error[j] = (1/MAX_SIZE)*((y-yest)*(y-yest))*training[row][j];
+            float x = training[row][j];
+            error[j] = ((errory*errory)*x)/TRAINING_SIZE;
         }
         else
         {
-            error[j] = (1/MAX_SIZE)*((y-yest)*(y-yest));
+            error[j] = (errory*errory)/TRAINING_SIZE;
         }
     }
-    updateWeights(row);
 }
 
 void updateWeights(int row)
 {
     for (int i = 0; i < 9; i++)
     {
-        weights[i] = weights[i] + (learning_rate*error[i]*training[row][i]);
+        weights[i] = weights[i] + (learning_rate*error[i]);
     }
 }
