@@ -21,6 +21,7 @@ void load_data();
 void shuffle(int length);
 void train_data();
 void split_data();
+void updateWeights(int row);
 
 int main(void)
 {
@@ -152,7 +153,7 @@ void train_data(int row)
 
 void updateWeights(int row)
 {
-    for (int i = 0; i < 10; i++)
+    for (int i = 0; i < 9; i++)
     {
         weights[i] = weights[i] + (learning_rate*error[i]*training[row][i]);
     }
