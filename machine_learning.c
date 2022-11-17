@@ -14,13 +14,15 @@ int testing[TESTING_SIZE][10];
 float weights[9] = {0,0,0,0,0,0,0,0,0};
 float error[10];
 float learning_rate = 0.5;
+float training_error_total = 0,testing_error_total = 0;
 
 // Function prototypes
 void load_data();
 void shuffle(int length);
 void split_data();
-void train_data();
+void train_data(int row);
 void updateWeights(int row);
+void test_data(int row);
 
 int main(void)
 {
@@ -31,15 +33,15 @@ int main(void)
     {
         train_data(i);
         updateWeights(i);
-        for (int j = 0; j < 10; j++)
-        {
-            printf("weight %d is %lf\n",j,weights[j]);
-        }
     }
-    for (int i = 0; i < 10; i++)
+    training_error_total = training_error_total/TRAINING_SIZE;
+    printf("The accuracy for the training dataset is %f\n",training_error_total);
+    for (int j = 0; j < TESTING_SIZE; j++)
     {
-        printf("weight %d is %lf\n",i,weights[i]);
+        test_data(j);
     }
+    testing_error_total = testing_error_total/TRAINING_SIZE;
+    printf("The accuracy for the testing dataset is %f",testing_error_total);
     return 0;
 }
 
@@ -47,7 +49,7 @@ void load_data()
 {
     FILE *fptr;
     char line[MAX_LINE_LENGTH];
-    int row = 0, col = 0, player = -1, computer = 1, blank = 0;;
+    int row = 0, col = 0, player = -1, computer = 1, blank = 0;
     if ((fptr = fopen("tic-tac-toe.data", "r")) == NULL)
     {
         printf("Error opening file!");
@@ -131,7 +133,7 @@ void shuffle(int length)
 
 void train_data(int row)
 {
-    float y= training[row][9]; 
+    float y = training[row][9]; 
     float yest = 0;
     for (int i = 0; i < 9; i++)
     {
@@ -139,6 +141,7 @@ void train_data(int row)
     }
 
     float errory = y - yest;
+    //printf("The error at row %d is: %lf\n",row,errory);
 
     for (int j = 0; j < 10; j++)
     {
@@ -150,12 +153,26 @@ void train_data(int row)
         else
         {
             error[j] = (errory*errory)/TRAINING_SIZE;
+            training_error_total += (errory*errory);
         }
     }
 }
 
+void test_data(int row)
+{
+    float y = testing[row][9];
+    float yest = 0;
+    for (int i = 0; i < 9; i++)
+    {
+        yest += weights[i] * testing[row][i];
+    }
+    float errory = y - yest;
+    testing_error_total += (errory*errory);
+}
+
 void updateWeights(int row)
 {
+    printf("At row %d, error is %f\n",row+1,error[9]);
     for (int i = 0; i < 9; i++)
     {
         weights[i] = weights[i] + (learning_rate*error[i]);
