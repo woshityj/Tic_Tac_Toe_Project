@@ -1,0 +1,9 @@
+Weight 1: -2.661997
+Weight 2: -3.847179
+Weight 3: -2.071483
+Weight 4: -1.634529
+Weight 5: -1.663085
+Weight 6: -4.245423
+Weight 7: -3.429138
+Weight 8: -2.177274
+Weight 9: -3.638732
