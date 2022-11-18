@@ -11,7 +11,7 @@ void disableButtons();
 void destroy(GtkWidget *widget, gpointer data);
 void changeGamemode(GtkWidget *widget, gpointer data);
 void announceWinner(int winner, int draw);
-
+void gtk_fixed_remove (GtkFixed  *fixed,GtkWidget *widget);
 /* Creation of GTKWidgets for Graphical User Interface */
 GtkWidget       *window;
 
@@ -48,6 +48,13 @@ void destroy(GtkWidget *widget, gpointer data)
 {
     gtk_window_close(data);
 }
+
+
+void gtk_fixed_remove (GtkFixed  *fixed,GtkWidget *widget)
+{
+  gtk_widget_unparent (widget);
+}
+
 
 void initializeGUI()
 {
@@ -90,7 +97,7 @@ void initializeGUI()
     g_signal_connect(button9, "clicked", G_CALLBACK(playerMove), &board[2][2]);
 
     resetbutton = GTK_WIDGET(gtk_builder_get_object(builder, "resetbutton"));
-    g_signal_connect(resetbutton, "clicked", G_CALLBACK(resetBoard), NULL);
+    g_signal_connect(resetbutton, "clicked", G_CALLBACK(gtk_fixed_remove), stackfixed1);
 
     announce = GTK_WIDGET(gtk_builder_get_object(builder, "announce"));
 
