@@ -2,3 +2,4 @@
 gui_testing.c
 gui_testing
 *.exe
+.DS*

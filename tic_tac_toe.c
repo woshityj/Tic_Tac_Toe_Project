@@ -3,7 +3,6 @@
 #include "gui.h"
 
 // Function Prototypes
-void changeGamemode(GtkWidget *widget, gpointer data);
 void playerMove(GtkWidget *widget, gpointer data);
 void computerMove();
 int checkFreeSpaces();
