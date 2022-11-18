@@ -3,7 +3,7 @@
 
 // Function Protoypes
 int evaluate();
-int minimax(int depth, int isMax);
+int minimax(int depth, int isMax, int alpha, int beta, int *ptr_counter);
 void findBestMove();
 int max(int num1, int num2);
 int min(int num1, int num2);
@@ -32,7 +32,7 @@ int evaluate()
 
 }
 
-int minimax(int depth, int isMax)
+int minimax(int depth, int isMax, int alpha, int beta, int *ptr_counter)
 {
     int score, spaces_left;
 
@@ -66,9 +66,18 @@ int minimax(int depth, int isMax)
                 {
                     board[i][j] = COMPUTER;
 
-                    best = max(best, minimax(depth + 1, !isMax));
+                    *ptr_counter = *ptr_counter + 1;
+
+                    best = max(best, minimax(depth + 1, !isMax, alpha, beta, ptr_counter));
+
+                    alpha = max(alpha, best);
 
                     board[i][j] = 0;
+                    
+                    if (beta <= alpha)
+                    {
+                        break;
+                    }
                 }
             }
         }
@@ -86,9 +95,18 @@ int minimax(int depth, int isMax)
                 {
                     board[i][j] = PLAYER;
 
-                    best = min(best, minimax(depth + 1, !isMax));
+                    *ptr_counter = *ptr_counter + 1;
+
+                    best = min(best, minimax(depth + 1, !isMax, alpha, beta, ptr_counter));
+
+                    beta = min(beta, best);
 
                     board[i][j] = 0;
+
+                    if (beta <= alpha)
+                    {
+                        break;
+                    }
                 }
             }
         }
@@ -99,6 +117,7 @@ int minimax(int depth, int isMax)
 void findBestMove()
 {
     int bestVal = -1000;
+    int counter = 0;
 
     for (int i = 0; i < 3; i++)
     {
@@ -108,7 +127,7 @@ void findBestMove()
             {
                 board[i][j] = COMPUTER;
 
-                int moveVal = minimax(0, 0);
+                int moveVal = minimax(0, 0, -1000, 1000, &counter);
 
                 board[i][j] = 0;
 
@@ -123,6 +142,7 @@ void findBestMove()
     }
 
     printf("The value of the best Move: %d\n\n", bestVal);
+    printf("The amount of iterations are: %d\n", counter);
 }
 
 int max(int num1, int num2)

@@ -12,6 +12,8 @@ int player_2_score = 0;
 int gamemode = 0;
 int bestMove[2] = {-1, -1};
 float aiPercentage = 0;
+int alpha;
+int beta;
 
 int main(int argc, char *argv[])
 {
