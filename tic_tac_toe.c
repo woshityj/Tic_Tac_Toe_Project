@@ -28,14 +28,14 @@ void playerMove(GtkWidget *widget, gpointer data)
 
     if (gamemode == 0)
     {
-        if (turncounter % 2 == 0 || turncounter == 0)
+        if (turncounter % 2 == 0)
         {
             *ptr_board = PLAYER;
             gtk_button_set_label(GTK_BUTTON(widget), "X");
             turncounter = turncounter + 1;
 
         }
-        else if (turncounter % 2 == 1 && gamemode == 0)
+        else if (turncounter % 2 == 1)
         {
             *ptr_board = COMPUTER;
             gtk_button_set_label(GTK_BUTTON(widget), "O");
