@@ -5,16 +5,15 @@
 
 #define MAX_LINE_LENGTH 1000
 #define MAX_SIZE 958
-#define TRAINING_SIZE 766
-#define TESTING_SIZE 192
+#define TRAINING_SIZE 575
+#define TESTING_SIZE 383
 
 int board[MAX_SIZE][10];
 int training[TRAINING_SIZE][10];
 int testing[TESTING_SIZE][10];
 float weights[9] = {0,0,0,0,0,0,0,0,0};
-float error[10];
-float learning_rate = 0.5;
-float training_error_total = 0,testing_error_total = 0;
+float error[10], training_error[TRAINING_SIZE];
+float learning_rate = 0.5,training_error_total = 0,testing_error_total = 0;
 
 // Function prototypes
 void load_data();
@@ -23,25 +22,33 @@ void split_data();
 void train_data(int row);
 void updateWeights(int row);
 void test_data(int row);
+void save_weights();
+void plot_data();
 
 int main(void)
 {
     load_data();    //loads data into board array
     shuffle(MAX_SIZE); //shuffles the data into random order
     split_data(); //splits the data into training and testing data
+    remove("training_accuracy.dat");
     for (int i = 0; i < TRAINING_SIZE; i++)
     {
         train_data(i);
         updateWeights(i);
     }
-    training_error_total = training_error_total/TRAINING_SIZE;
-    printf("The accuracy for the training dataset is %f\n",training_error_total);
+    float training_MMSE = training_error_total/TRAINING_SIZE;
+    printf("The error for the training dataset is %f\n",training_MMSE);
+    for (int i = 0; i < 9; i++)
+    {
+        printf("Weight %d is %f\n",i,weights[i]);
+    }
     for (int j = 0; j < TESTING_SIZE; j++)
     {
         test_data(j);
     }
-    testing_error_total = testing_error_total/TRAINING_SIZE;
-    printf("The accuracy for the testing dataset is %f",testing_error_total);
+    float testing_MMSE = testing_error_total/TRAINING_SIZE;
+    printf("\nThe error for the testing dataset is %f",testing_MMSE);
+    //save_weights();
     return 0;
 }
 
@@ -77,11 +84,11 @@ void load_data()
             }
             else if (strcmp(record,"positive") == 0)
             {
-                board[row][col++] = 10;
+                board[row][col++] = -1; //positive for player means negative for computer
             }
             else if (strcmp(record,"negative") == 0)
             {
-                board[row][col++] = -10;
+                board[row][col++] = 1;
             }
             record = strtok(NULL,",");
         }
@@ -133,26 +140,40 @@ void shuffle(int length)
 
 void train_data(int row)
 {
-    float y = training[row][9]; 
+    float y = training[row][9];
     float yest = 0;
     for (int i = 0; i < 9; i++)
     {
         yest += weights[i] * training[row][i];
     }
-
-    float errory = y - yest;
-    //printf("The error at row %d is: %lf\n",row,errory);
-
+    if (yest > 0)
+    {
+        yest = 1;
+    }
+    
+    else
+    {
+        yest = 0;
+    }
+    float errory = yest - y;
+    
     for (int j = 0; j < 10; j++)
     {
         if(j != 9)
         {
-            float x = training[row][j];
-            error[j] = ((errory*errory)*x)/TRAINING_SIZE;
+            int x = training[row][j];
+            error[j] = (errory*x);
         }
         else
         {
-            error[j] = (errory*errory)/TRAINING_SIZE;
+            error[j] = errory;
+            // FILE *f_ptr = fopen("training_accuracy.dat","a");
+            // int written = fprintf(f_ptr, "%d\t%f\n",row, error[j]);
+            // if (written == 0)
+            // {
+            //     printf("Error writing to file.");
+            // }
+            // fclose(f_ptr);
             training_error_total += (errory*errory);
         }
     }
@@ -166,7 +187,16 @@ void test_data(int row)
     {
         yest += weights[i] * testing[row][i];
     }
-    float errory = y - yest;
+    float errory = yest - y;
+    if (yest > 0)
+    {
+        yest = 1;
+    }
+    
+    else
+    {
+        yest = 0;
+    }
     testing_error_total += (errory*errory);
 }
 
@@ -175,6 +205,20 @@ void updateWeights(int row)
     printf("At row %d, error is %f\n",row+1,error[9]);
     for (int i = 0; i < 9; i++)
     {
-        weights[i] = weights[i] + (learning_rate*error[i]);
+        weights[i] += (learning_rate*error[i]*training[row][i]);
     }
+}
+
+void save_weights()
+{
+    FILE *f_ptr = fopen("weights.txt","w");
+    for (unsigned i = 0; i < 9; i++)
+    {
+        int written = fprintf(f_ptr, "Weight %d: %f\n", i+1, weights[i]);
+        if (written == 0)
+        {
+            printf("Error writing to file.");
+        }
+    }
+    fclose(f_ptr);
 }
