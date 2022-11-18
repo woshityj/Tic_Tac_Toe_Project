@@ -1,8 +1,6 @@
 /* Libraries */
 #include "global.h"
 #include "gui.h"
-#include "tic_tac_toe.h"
-#include "minimax.h"
 
 /* Function Prototypes */
 void initializeGUI();
