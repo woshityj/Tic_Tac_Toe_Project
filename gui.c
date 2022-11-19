@@ -106,10 +106,16 @@ void initializeGUI()
     player_vs_computer_medium = gtk_button_new_with_label("Player Vs Computer(Medium)");
     player_vs_computer_hard = gtk_button_new_with_label("Player Vs Computer(Hard)");
 
+    gtk_button_set_relief(GTK_BUTTON(player_vs_player), GTK_RELIEF_NONE);
+    gtk_button_set_relief(GTK_BUTTON(player_vs_computer_easy), GTK_RELIEF_NONE);
+    gtk_button_set_relief(GTK_BUTTON(player_vs_computer_medium), GTK_RELIEF_NONE);
+    gtk_button_set_relief(GTK_BUTTON(player_vs_computer_hard), GTK_RELIEF_NONE);
+
 
     quit= gtk_button_new_with_label("Quit");
     g_signal_connect(quit,"clicked", G_CALLBACK(gtk_main_quit),NULL);
-    
+
+    gtk_button_set_relief(GTK_BUTTON(quit), GTK_RELIEF_NONE);
 
     gtk_container_add(GTK_CONTAINER(mainMenu),player_vs_player);
     gtk_widget_set_name(player_vs_player,"player_vs_player");
@@ -167,6 +173,10 @@ void initializeGUI()
     gtk_widget_set_name(restart,"restart");
     gtk_widget_set_halign(GTK_CONTAINER(optionbox), GTK_ALIGN_CENTER);
 
+    gtk_button_set_relief(GTK_BUTTON(back), GTK_RELIEF_NONE);
+    gtk_button_set_relief(GTK_BUTTON(reset), GTK_RELIEF_NONE);
+    gtk_button_set_relief(GTK_BUTTON(restart), GTK_RELIEF_NONE);
+
     
 
     //Tic tac toe page 
@@ -207,6 +217,15 @@ void initializeGUI()
     gtk_grid_attach(GTK_GRID(tttgrid),GTK_BUTTON(button8),2,2,1,1);
     gtk_grid_attach(GTK_GRID(tttgrid),GTK_BUTTON(button9),3,2,1,1);
 
+    gtk_button_set_relief(GTK_BUTTON(button1), GTK_RELIEF_NONE);
+    gtk_button_set_relief(GTK_BUTTON(button2), GTK_RELIEF_NONE);
+    gtk_button_set_relief(GTK_BUTTON(button3), GTK_RELIEF_NONE);
+    gtk_button_set_relief(GTK_BUTTON(button4), GTK_RELIEF_NONE);
+    gtk_button_set_relief(GTK_BUTTON(button5), GTK_RELIEF_NONE);
+    gtk_button_set_relief(GTK_BUTTON(button6), GTK_RELIEF_NONE);
+    gtk_button_set_relief(GTK_BUTTON(button7), GTK_RELIEF_NONE);
+    gtk_button_set_relief(GTK_BUTTON(button8), GTK_RELIEF_NONE);
+    gtk_button_set_relief(GTK_BUTTON(button9), GTK_RELIEF_NONE);
 
     GtkCssProvider *cssProvider = gtk_css_provider_new();
     gtk_css_provider_load_from_path(cssProvider, "theme.css", NULL);
