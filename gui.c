@@ -163,8 +163,8 @@ void resetBoard()
 
 void resetScore()
 {
-    gtk_button_set_label(score1, "0");
-    gtk_button_set_label(score2, "0");
+    gtk_label_set_label(GTK_LABEL(score1), "0");
+    gtk_label_set_label(GTK_LABEL(score2), "0");
 }
 
 void resetGame()
