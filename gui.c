@@ -228,7 +228,7 @@ void initializeGUI()
     gtk_button_set_relief(GTK_BUTTON(button9), GTK_RELIEF_NONE);
 
     GtkCssProvider *cssProvider = gtk_css_provider_new();
-    gtk_css_provider_load_from_path(cssProvider, "theme.css", NULL);
+    gtk_css_provider_load_from_path(cssProvider, "themenew.css", NULL);
     gtk_style_context_add_provider_for_screen(gdk_screen_get_default(),GTK_STYLE_PROVIDER(cssProvider),GTK_STYLE_PROVIDER_PRIORITY_USER);
     
   
