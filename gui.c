@@ -7,6 +7,8 @@
 void setAIdifficulty();
 void initializeGUI();
 void resetBoard();
+void resetScore();
+void resetGame();
 void disableButtons();
 void destroy(GtkWidget *widget, gpointer data);
 void changeGamemode(GtkWidget *widget, gpointer data);
@@ -47,7 +49,6 @@ void destroy(GtkWidget *widget, gpointer data)
 {
     gtk_window_close(data);
 }
-
 
 void initializeGUI()
 {
@@ -158,6 +159,18 @@ void resetBoard()
     gtk_widget_set_sensitive (button7, TRUE);
     gtk_widget_set_sensitive (button8, TRUE);
     gtk_widget_set_sensitive (button9, TRUE);
+}
+
+void resetScore()
+{
+    gtk_button_set_label(score1, "0");
+    gtk_button_set_label(score2, "0");
+}
+
+void resetGame()
+{
+    resetBoard();
+    resetScore();
 }
 
 void disableButtons()

@@ -9,6 +9,10 @@ void initializeGUI();
 
 void resetBoard();
 
+void resetScore();
+
+void resetGame();
+
 void disableButtons();
 
 void destroy(GtkWidget *widget, gpointer data);
