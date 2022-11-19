@@ -13,33 +13,41 @@
 #define COMPUTER 'O'
 
 /* Creation of GTKWidgets for Graphical User Interface */
-extern GtkWidget       *window;
+extern GtkWidget *window;
 
-/* Navigation Bar GTKWidgets */
-extern GtkWidget       *player_vs_player;
-extern GtkWidget       *player_vs_computer_easy;
-extern GtkWidget       *player_vs_computer_medium;
-extern GtkWidget       *player_vs_computer_hard;
-extern GtkWidget       *quit;
+/* Homepage GTKWidgets */
+extern GtkWidget *header;
+extern GtkWidget *mainMenu;
+extern GtkWidget *player_vs_player;
+extern GtkWidget *player_vs_computer_easy;
+extern GtkWidget *player_vs_computer_medium;
+extern GtkWidget *player_vs_computer_hard;
+extern GtkWidget *quit;
 
 /* Game Display */
-extern GtkWidget       *stackfixed1;
-extern GtkWidget       *announce;
-extern GtkWidget       *player1;
-extern GtkWidget       *player2;
-extern GtkWidget       *score1;
-extern GtkWidget       *score2;
-extern GtkWidget       *resetbutton;
-extern GtkWidget       *button1;
-extern GtkWidget       *button2;
-extern GtkWidget       *button3;
-extern GtkWidget       *button4;
-extern GtkWidget       *button5;
-extern GtkWidget       *button6;
-extern GtkWidget       *button7;
-extern GtkWidget       *button8;
-extern GtkWidget       *button9;
-extern GtkBuilder      *builder;
+extern GtkWidget *MainBox;
+extern GtkWidget *tttpage;
+extern GtkWidget *tttgrid;
+extern GtkWidget *button1;
+extern GtkWidget *child1;
+extern GtkWidget *button2;
+extern GtkWidget *button3;
+extern GtkWidget *button4;
+extern GtkWidget *button5;
+extern GtkWidget *button6;
+extern GtkWidget *button7;
+extern GtkWidget *button8;
+extern GtkWidget *button9;
+extern GtkWidget *image;
+extern GtkWidget *player1;
+extern GtkWidget *player2;
+extern GtkWidget *score1;
+extern GtkWidget *score2;
+extern GtkWidget *announce;
+extern GtkWidget *back;
+extern GtkWidget *reset;
+extern GtkWidget *restart;
+extern GtkWidget *optionbox;
 
 /* Global Variables */
 extern char board[3][3];
