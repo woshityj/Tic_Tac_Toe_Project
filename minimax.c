@@ -12,7 +12,17 @@ int getAIDecision();
 int checkWinner();
 int checkFreeSpaces();
 
-// Main Functions
+/*------------------------------------------------- evaluate -----
+|  Function evaluate
+|
+|  Purpose:  Based on the placement of the pieces on the Temporary Board by the MiniMax Algorithm,
+|            this function would return a value based on whether the placement of the pieces via the MiniMax Function results in a win
+|            for the COMPUTER or a loss for the COMPUTER
+|
+|  Returns:  -10 -- If the placement of the pieces results in a loss for the COMPUTER, the value -10 will be returned
+|            +10 -- If the placement of the pieces results in a win for the COMPUTER, the value +10 will be returned
+|              0 -- If the placement of the piece results in a draw, the value 0 will be returned
+*-------------------------------------------------------------------*/
 int evaluate()
 {
     int check_winner;
@@ -29,9 +39,26 @@ int evaluate()
     {
         return 0;
     }
-
 }
 
+/*------------------------------------------------- minimax -----
+|  Function minimax
+|
+|  Purpose:  Uses a Backtracking Algorithm to consider all the possible ways the game can go 
+|            and find the most optimal move that results in a win for the COMPUTER,
+|            the maximiser (-1000) will try to get the best score possible and the minimiser (1000) will try to get
+|            the worse score possible. 
+|  Parameters:
+|      depth -- Determines the level that the MiniMax Algorithm is currently on, where 0 signifies that its currently
+|               on the highest level (0).
+|      isMax -- A boolean to check if we are looking for the maximiser score or the minimiser score
+|      alpha -- Contains the best value that the maximiser currently can guarantee at that level or above
+|      beta  -- Contains the best value that the minimiser currently can guarantee at that level or below
+|
+|  Returns:  score -- If 10 is returned, it means that the position results in a win for the COMPUTER (maximiser),
+|                     but if -10 is returned it means the position results in a loss for the COMPUTER (minimiser).
+|            best  -- Returns the maximiser or minimisers score.
+*-------------------------------------------------------------------*/
 int minimax(int depth, int isMax, int alpha, int beta, int *ptr_counter)
 {
     int score, spaces_left;
@@ -163,6 +190,25 @@ int min(int num1, int num2)
     return num2;
 }
 
+/*------------------------------------------------- minimax -----
+|  Function minimax
+|
+|  Purpose:  Uses a Backtracking Algorithm to consider all the possible ways the game can go 
+|            and find the most optimal move that results in a win for the COMPUTER,
+|            the maximiser (-1000) will try to get the best score possible and the minimiser (1000) will try to get
+|            the worse score possible. 
+|  Parameters:
+|      depth -- Determines the level that the MiniMax Algorithm is currently on, where 0 signifies that its currently
+|               on the highest level (0).
+|      isMax -- A boolean to check if we are looking for the maximiser score or the minimiser score
+|      alpha -- Contains the best value that the maximiser currently can guarantee at that level or above
+|      beta  -- Contains the best value that the minimiser currently can guarantee at that level or below
+|
+|  Returns:  score -- If 10 is returned, it means that the position results in a win for the COMPUTER (maximiser),
+|                     but if -10 is returned it means the position results in a loss for the COMPUTER (minimiser).
+|            best  -- Returns the maximiser or minimisers score.
+*-------------------------------------------------------------------*/
+
 void setAIDifficulty()
 {
     if (gamemode == 1)
@@ -180,8 +226,24 @@ void setAIDifficulty()
     return;
 }
 
-/* Write a function to calculate the possibility of picking the MiniMax Best Move and a random move on the board */
-
+/*------------------------------------------------- getAIDecision -----
+|  Function getAIDecision
+|
+|  Purpose:  Uses a Backtracking Algorithm to consider all the possible ways the game can go 
+|            and find the most optimal move that results in a win for the COMPUTER,
+|            the maximiser (-1000) will try to get the best score possible and the minimiser (1000) will try to get
+|            the worse score possible.
+|  Parameters:
+|      depth -- Determines the level that the MiniMax Algorithm is currently on, where 0 signifies that its currently
+|               on the highest level (0).
+|      isMax -- A boolean to check if we are looking for the maximiser score or the minimiser score
+|      alpha -- Contains the best value that the maximiser currently can guarantee at that level or above
+|      beta  -- Contains the best value that the minimiser currently can guarantee at that level or below
+|
+|  Returns:  score -- If 10 is returned, it means that the position results in a win for the COMPUTER (maximiser),
+|                     but if -10 is returned it means the position results in a loss for the COMPUTER (minimiser).
+|            best  -- Returns the maximiser or minimisers score.
+*-------------------------------------------------------------------*/
 int getAIDecision()
 {
     float value;

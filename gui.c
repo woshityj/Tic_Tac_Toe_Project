@@ -171,7 +171,7 @@ void initializeGUI()
     gtk_widget_set_name(back,"back");
     gtk_widget_set_name(reset,"reset");
     gtk_widget_set_name(restart,"restart");
-    gtk_widget_set_halign(GTK_CONTAINER(optionbox), GTK_ALIGN_CENTER);
+    gtk_widget_set_halign(optionbox, GTK_ALIGN_CENTER);
 
     gtk_button_set_relief(GTK_BUTTON(back), GTK_RELIEF_NONE);
     gtk_button_set_relief(GTK_BUTTON(reset), GTK_RELIEF_NONE);
@@ -207,15 +207,15 @@ void initializeGUI()
     gtk_widget_set_name(button9,"button9");
 
     gtk_grid_set_row_homogeneous(GTK_GRID(tttgrid),TRUE);
-    gtk_grid_attach(GTK_GRID(tttgrid),GTK_BUTTON(button1),1,0,1,1);
-    gtk_grid_attach(GTK_GRID(tttgrid),GTK_BUTTON(button2),2,0,1,1);
-    gtk_grid_attach(GTK_GRID(tttgrid),GTK_BUTTON(button3),3,0,1,1);
-    gtk_grid_attach(GTK_GRID(tttgrid),GTK_BUTTON(button4),1,1,1,1);
-    gtk_grid_attach(GTK_GRID(tttgrid),GTK_BUTTON(button5),2,1,1,1);
-    gtk_grid_attach(GTK_GRID(tttgrid),GTK_BUTTON(button6),3,1,1,1);
-    gtk_grid_attach(GTK_GRID(tttgrid),GTK_BUTTON(button7),1,2,1,1);
-    gtk_grid_attach(GTK_GRID(tttgrid),GTK_BUTTON(button8),2,2,1,1);
-    gtk_grid_attach(GTK_GRID(tttgrid),GTK_BUTTON(button9),3,2,1,1);
+    gtk_grid_attach(GTK_GRID(tttgrid),button1,1,0,1,1);
+    gtk_grid_attach(GTK_GRID(tttgrid),button2,2,0,1,1);
+    gtk_grid_attach(GTK_GRID(tttgrid),button3,3,0,1,1);
+    gtk_grid_attach(GTK_GRID(tttgrid),button4,1,1,1,1);
+    gtk_grid_attach(GTK_GRID(tttgrid),button5,2,1,1,1);
+    gtk_grid_attach(GTK_GRID(tttgrid),button6,3,1,1,1);
+    gtk_grid_attach(GTK_GRID(tttgrid),button7,1,2,1,1);
+    gtk_grid_attach(GTK_GRID(tttgrid),button8,2,2,1,1);
+    gtk_grid_attach(GTK_GRID(tttgrid),button9,3,2,1,1);
 
     gtk_button_set_relief(GTK_BUTTON(button1), GTK_RELIEF_NONE);
     gtk_button_set_relief(GTK_BUTTON(button2), GTK_RELIEF_NONE);
