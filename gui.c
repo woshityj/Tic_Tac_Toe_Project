@@ -49,7 +49,7 @@ GtkWidget *button8;
 GtkWidget *button9;
 GtkWidget *image;
 GtkWidget *player1;
-GtkWidget *player2;
+GtkWidget *opponent;
 GtkWidget *score1;
 GtkWidget *score2;
 GtkWidget *header;
@@ -135,11 +135,11 @@ void initializeGUI()
 
     //Creating player 1,2 label
     player1 = gtk_label_new("Player 1");
-    player2 = gtk_label_new("Player 2");
+    opponent = gtk_label_new("Player 2");
     gtk_container_add(GTK_CONTAINER(MainBox),player1);
-    gtk_container_add(GTK_CONTAINER(MainBox),player2);
+    gtk_container_add(GTK_CONTAINER(MainBox),opponent);
     gtk_widget_set_name(player1,"player1");
-    gtk_widget_set_name(player2,"player2");
+    gtk_widget_set_name(opponent,"player2");
 
 
     //Create scores label
@@ -237,7 +237,7 @@ void initializeGUI()
 
     gtk_widget_hide(tttpage);
     gtk_widget_hide(player1);
-    gtk_widget_hide(player2);
+    gtk_widget_hide(opponent);
     gtk_widget_hide(score1);
     gtk_widget_hide(score2);
     gtk_widget_hide(announce);
@@ -293,9 +293,9 @@ void announceWinner(int winner, int draw)
         {
             gtk_label_set_label(GTK_LABEL(announce), "Player 2 wins!");
         }
-        player_2_score = player_2_score + 1;
+        opponent_score = opponent_score + 1;
         gchar *display;
-        display = g_strdup_printf("%d", player_2_score);
+        display = g_strdup_printf("%d", opponent_score);
         gtk_label_set_label(GTK_LABEL(score2), display);
         g_free(display);
         disableButtons();
@@ -313,7 +313,7 @@ void hidegrid()
     gtk_widget_show(header);
     gtk_widget_hide(tttpage);
     gtk_widget_hide(player1);
-    gtk_widget_hide(player2);
+    gtk_widget_hide(opponent);
     gtk_widget_hide(score1);
     gtk_widget_hide(score2);
     gtk_widget_hide(announce);
@@ -329,7 +329,7 @@ void hideMenu()
     gtk_widget_hide(header);
     gtk_widget_show(tttpage);
     gtk_widget_show(player1);
-    gtk_widget_show(player2);
+    gtk_widget_show(opponent);
     gtk_widget_show(score1);
     gtk_widget_show(score2);
     gtk_widget_show(announce);
@@ -372,7 +372,7 @@ void resetScore()
     gtk_label_set_label(GTK_LABEL(score1), "0");
     gtk_label_set_label(GTK_LABEL(score2), "0");
     player_1_score = 0;
-    player_2_score = 0;
+    opponent_score = 0;
 }
 
 void resetGame()
@@ -402,7 +402,7 @@ void changeGamemode(GtkWidget *widget, gpointer data)
     {
         gamemode = 0;
         hideMenu();
-        gtk_label_set_label(GTK_LABEL(player2), "Player 2");
+        gtk_label_set_label(GTK_LABEL(opponent), "Player 2");
         resetBoard();
     }
     else if (*ptr_gamemode == '1')
@@ -410,7 +410,7 @@ void changeGamemode(GtkWidget *widget, gpointer data)
         gamemode = 1;
         setAIDifficulty();
         hideMenu();
-        gtk_label_set_label(GTK_LABEL(player2), "Easy");
+        gtk_label_set_label(GTK_LABEL(opponent), "Easy");
         resetBoard();
     }
     else if (*ptr_gamemode == '2')
@@ -418,7 +418,7 @@ void changeGamemode(GtkWidget *widget, gpointer data)
         gamemode = 2;
         setAIDifficulty();
         hideMenu();
-        gtk_label_set_label(GTK_LABEL(player2), "Medium");
+        gtk_label_set_label(GTK_LABEL(opponent), "Medium");
         resetBoard();
     }
     else if (*ptr_gamemode == '3')
@@ -426,7 +426,7 @@ void changeGamemode(GtkWidget *widget, gpointer data)
         gamemode = 3;
         setAIDifficulty();
         hideMenu();
-        gtk_label_set_label(GTK_LABEL(player2), "Hard");
+        gtk_label_set_label(GTK_LABEL(opponent), "Hard");
         resetBoard();
     }
 }

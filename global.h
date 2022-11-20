@@ -53,7 +53,7 @@ extern GtkWidget *optionbox;
 extern char board[3][3];
 extern int turncounter;
 extern int player_1_score;
-extern int player_2_score;
+extern int opponent_score;
 extern int gamemode;
 extern int bestMove[2];
 extern float aiPercentage;
