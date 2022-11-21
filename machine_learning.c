@@ -135,8 +135,6 @@ void split_data()
 
 void shuffle(int length)
 {
-    srand(time(NULL));
-
     for(int i = 0; i < length; i++)
     {
         int swap_index = rand() % length;
