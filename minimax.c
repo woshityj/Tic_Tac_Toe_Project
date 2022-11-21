@@ -89,6 +89,14 @@ int minimax(int depth, int isMax, int alpha, int beta, int *ptr_counter)
         return 0;
     }
 
+    if (imperfect)
+    {
+        if(depth == 3)
+        {
+            return score;
+        }
+    }
+
     if (isMax == 1)
     {
         int best = -1000;

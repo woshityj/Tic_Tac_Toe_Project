@@ -416,6 +416,7 @@ void changeGamemode(GtkWidget *widget, gpointer data)
     else if (*ptr_gamemode == '2')
     {
         gamemode = 2;
+        imperfect = 1;
         setAIDifficulty();
         hideMenu();
         gtk_label_set_label(GTK_LABEL(opponent), "Medium");
