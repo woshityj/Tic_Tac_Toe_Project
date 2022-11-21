@@ -3,8 +3,8 @@
 /* Machine Learning Variables*/
 #define MAX_LINE_LENGTH 1000
 #define MAX_SIZE 958
-#define TRAINING_SIZE 575
-#define TESTING_SIZE 383
+#define TRAINING_SIZE 766
+#define TESTING_SIZE 192
 
 // Global Variables for Machine Learning, not to be accessed by other files
 int ml_ml_board[MAX_SIZE][10];
@@ -159,7 +159,7 @@ void train_data(int row)
         yest = -1;
     }
 
-    float errory = yest - y;
+    float errory = y - yest;
     
     for (int j = 0; j < 10; j++)
     {
@@ -201,7 +201,7 @@ void test_data(int row)
         yest = -1;
     }
 
-    float errory = yest - y;
+    float errory = y - yest;
     
     testing_error_total += (errory*errory);
 }
