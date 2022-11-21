@@ -84,26 +84,7 @@ void playerMove(GtkWidget *widget, gpointer data)
        or a Draw via the checkWinner() function and the draw() function.
      */
 
-    if (gamemode == 1 || gamemode == 2 || gamemode == 3)
-    {
-        *ptr_board = PLAYER;
-        gtk_button_set_label(GTK_BUTTON(widget), "X");
-        turncounter = turncounter + 1;
-        check_winner = checkWinner();
-        check_draw = draw(checkFreeSpaces());
-        announceWinner(check_winner, check_draw);
-
-        if (check_winner == 0 && check_draw == 0)
-        {
-            computerMove();
-            turncounter = turncounter + 1;
-            check_winner = checkWinner();
-            check_draw = draw(checkFreeSpaces());
-            announceWinner(check_winner, check_draw);
-        }
-    }
-
-    if (gamemode == 4)
+    if (gamemode == 1 || gamemode == 2 || gamemode == 3 || gamemode == 4)
     {
         *ptr_board = PLAYER;
         gtk_button_set_label(GTK_BUTTON(widget), "X");
