@@ -268,6 +268,10 @@ void setAIDifficulty()
     {
         aiPercentage = 1.0;
     }
+    else if (gamemode == 4)
+    {
+        aiPercentage = 0.0;
+    }
     return;
 }
 

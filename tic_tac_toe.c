@@ -1,6 +1,7 @@
 #include "global.h"
 #include "minimax.h"
 #include "gui.h"
+#include "machine_learning.h"
 
 // Function Prototypes
 void playerMove(GtkWidget *widget, gpointer data);
@@ -102,6 +103,21 @@ void playerMove(GtkWidget *widget, gpointer data)
         }
     }
 
+    if (gamemode == 4)
+    {
+        *ptr_board = PLAYER;
+        gtk_button_set_label(GTK_BUTTON(widget), "X");
+        turncounter = turncounter + 1;
+        check_winner = checkWinner();
+        check_draw = draw(checkFreeSpaces());
+        announceWinner(check_winner, check_draw);
+
+        if (check_winner == 0 && check_draw == 0)
+        {
+
+        }
+    }
+
     printBoard();
 }
 
@@ -117,43 +133,54 @@ void playerMove(GtkWidget *widget, gpointer data)
 *-------------------------------------------------------------------*/
 void computerMove()
 {
-    /* 
-       ai_decision will contain the value which decides if the 
-       MiniMax Algorithm will be used or a Random position on the board 
-       will be picked
-     */
-    int ai_decision = getAIDecision();
-    printf("\n%d", ai_decision);
     int ai_row = 0;
     int ai_column = 0;
     int x, y;
-
-    /* 
-       If the ai_decision is 1, we will make use of the findBestMove() to get 
-       the best row and column returned from the MiniMax Algorithm
-     */
-    if (ai_decision == 1)
+    if (gamemode == 1 || gamemode == 2 || gamemode == 3)
     {
-        findBestMove();
+        /* 
+        ai_decision will contain the value which decides if the 
+        MiniMax Algorithm will be used or a Random position on the board 
+        will be picked
+        */
+        int ai_decision = getAIDecision();
+        printf("\n%d", ai_decision);
+
+
+        /* 
+        If the ai_decision is 1, we will make use of the findBestMove() to get 
+        the best row and column returned from the MiniMax Algorithm
+        */
+        if (ai_decision == 1)
+        {
+            findBestMove();
+            ai_row = bestMove[0];
+            ai_column = bestMove[1];
+        }
+
+        /* 
+        If the ai_decision is 0, we will make use of the rand() function to select
+        a random free space on the board
+        */
+
+        if (ai_decision == 0)
+        {
+            do
+            {
+                x = rand() % 3;
+                y = rand() % 3;
+            } while (strlen(&board[x][y]) != 0);
+            
+            ai_row = x;
+            ai_column = y;
+        }
+    }
+    
+    if (gamemode == 4)
+    {
+        findBestMoveML();
         ai_row = bestMove[0];
         ai_column = bestMove[1];
-    }
-
-    /* 
-       If the ai_decision is 0, we will make use of the rand() function to select
-       a random free space on the board
-     */
-
-    if (ai_decision == 0)
-    {
-        do
-        {
-            x = rand() % 3;
-            y = rand() % 3;
-        } while (strlen(&board[x][y]) != 0);
-        
-        ai_row = x;
-        ai_column = y;
     }
 
     /* 

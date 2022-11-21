@@ -1,4 +1,5 @@
 #include "global.h"
+#include "tic_tac_toe.h"
 
 /* Machine Learning Variables*/
 #define MAX_LINE_LENGTH 1000
@@ -25,6 +26,10 @@ void updateWeights(int row);
 void test_data(int row);
 void save_weights();
 void load_weights();
+int evaluateML(int depth);
+int ml_algorithm();
+void findBestMoveML();
+int checkWinner();
 
 int main()
 {
@@ -284,7 +289,7 @@ int evaluateML(int depth)
 
 int ml_algorithm()
 {
-    int move_val;
+    int move_val = 0;
 
     for (int i = 0; i < 3; i++)
     {

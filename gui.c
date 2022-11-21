@@ -23,6 +23,7 @@ GtkWidget       *player_vs_player;
 GtkWidget       *player_vs_computer_easy;
 GtkWidget       *player_vs_computer_medium;
 GtkWidget       *player_vs_computer_hard;
+GtkWidget       *player_vs_machine_learning;
 GtkWidget       *quit;
 
 /* Game Display */
@@ -32,6 +33,7 @@ GtkWidget *player_vs_player;
 GtkWidget *player_vs_computer_easy;
 GtkWidget *player_vs_computer_medium;
 GtkWidget *player_vs_computer_hard;
+GtkWidget *player_vs_machine_learning;
 GtkWidget *quit;
 GtkWidget *MainBox;
 GtkWidget *tttpage;
@@ -104,11 +106,13 @@ void initializeGUI()
     player_vs_computer_easy = gtk_button_new_with_label("Player Vs Computer(Easy)");
     player_vs_computer_medium = gtk_button_new_with_label("Player Vs Computer(Medium)");
     player_vs_computer_hard = gtk_button_new_with_label("Player Vs Computer(Hard)");
+    player_vs_machine_learning = gtk_button_new_with_label("Player Vs Machine Learning");
 
     gtk_button_set_relief(GTK_BUTTON(player_vs_player), GTK_RELIEF_NONE);
     gtk_button_set_relief(GTK_BUTTON(player_vs_computer_easy), GTK_RELIEF_NONE);
     gtk_button_set_relief(GTK_BUTTON(player_vs_computer_medium), GTK_RELIEF_NONE);
     gtk_button_set_relief(GTK_BUTTON(player_vs_computer_hard), GTK_RELIEF_NONE);
+    gtk_button_set_relief(GTK_BUTTON(player_vs_machine_learning), GTK_RELIEF_NONE);
 
 
     quit= gtk_button_new_with_label("Quit");
@@ -124,6 +128,8 @@ void initializeGUI()
     gtk_widget_set_name(player_vs_computer_medium,"player_vs_computer_medium");
     gtk_container_add(GTK_CONTAINER(mainMenu),player_vs_computer_hard);
     gtk_widget_set_name(player_vs_computer_hard,"player_vs_computer_hard");
+    gtk_container_add(GTK_CONTAINER(mainMenu),player_vs_machine_learning);
+    gtk_widget_set_name(player_vs_machine_learning,"player_vs_machine_learning");
     gtk_container_add(GTK_CONTAINER(mainMenu),quit);
     gtk_widget_set_name(quit,"quit");
     
@@ -249,6 +255,8 @@ void initializeGUI()
     g_signal_connect(player_vs_computer_easy, "clicked", G_CALLBACK(changeGamemode), "1");
     g_signal_connect(player_vs_computer_medium, "clicked", G_CALLBACK(changeGamemode), "2");
     g_signal_connect(player_vs_computer_hard, "clicked", G_CALLBACK(changeGamemode), "3");
+    g_signal_connect(player_vs_machine_learning, "clicked", G_CALLBACK(changeGamemode), "4");
+
 
     g_signal_connect(button1, "clicked", G_CALLBACK(playerMove), &board[0][0]);
     g_signal_connect(button2, "clicked", G_CALLBACK(playerMove), &board[0][1]);
@@ -427,6 +435,14 @@ void changeGamemode(GtkWidget *widget, gpointer data)
         setAIDifficulty();
         hideMenu();
         gtk_label_set_label(GTK_LABEL(opponent), "Hard");
+        resetBoard();
+    }
+    else if (*ptr_gamemode == '4')
+    {
+        gamemode = 4;
+        setAIDifficulty();
+        hideMenu();
+        gtk_label_set_label(GTK_LABEL(opponent), "Machine Learning");
         resetBoard();
     }
 }
