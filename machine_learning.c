@@ -26,7 +26,6 @@ void updateWeights(int row);
 void test_data(int row);
 void save_weights();
 void load_weights();
-int evaluateML(int depth);
 int ml_algorithm();
 void findBestMoveML();
 int checkWinner();
