@@ -73,7 +73,7 @@ void initializeGUI()
     // gtk_init(&argc,&argv);
   
     //Creating a window and styling of window
-    window =gtk_window_new(GTK_WINDOW_TOPLEVEL);
+    window = gtk_window_new(GTK_WINDOW_TOPLEVEL);
     gtk_window_set_title(GTK_WINDOW(window),"Tic Tac Toe");
     gtk_window_set_default_size(GTK_WINDOW(window),800,600);
     gtk_window_set_position(GTK_WINDOW(window),GTK_WIN_POS_CENTER);
@@ -85,20 +85,17 @@ void initializeGUI()
     MainBox = gtk_fixed_new();
     
     gtk_widget_set_name(MainBox,"MainBox");
-    
     gtk_container_add (GTK_CONTAINER (window), MainBox);
-    
+
     //creating box container
     mainMenu = gtk_box_new(GTK_ORIENTATION_VERTICAL,0);
-    //tttpage = gtk_box_new(GTK_ORIENTATION_HORIZONTAL,0);
-    tttpage = gtk_box_new(GTK_ORIENTATION_VERTICAL,0);
     gtk_container_add(GTK_CONTAINER(MainBox),mainMenu);
-    
-    gtk_container_add(GTK_CONTAINER (MainBox), tttpage);
     gtk_widget_set_name(mainMenu,"mainMenu");
-    gtk_widget_set_name(tttpage,"tttpage");
     
-   
+    //Creating welcome page
+    header = gtk_label_new("TIC TAC TOE");
+    gtk_widget_set_name(header,"header");
+    gtk_container_add(GTK_CONTAINER(MainBox),header);
     
     //Main Menu
     //creating elements in main menu 
@@ -107,17 +104,13 @@ void initializeGUI()
     player_vs_computer_medium = gtk_button_new_with_label("Player Vs Computer(Medium)");
     player_vs_computer_hard = gtk_button_new_with_label("Player Vs Computer(Hard)");
     player_vs_machine_learning = gtk_button_new_with_label("Player Vs ML");
+    quit= gtk_button_new_with_label("Quit");
 
     gtk_button_set_relief(GTK_BUTTON(player_vs_player), GTK_RELIEF_NONE);
     gtk_button_set_relief(GTK_BUTTON(player_vs_computer_easy), GTK_RELIEF_NONE);
     gtk_button_set_relief(GTK_BUTTON(player_vs_computer_medium), GTK_RELIEF_NONE);
     gtk_button_set_relief(GTK_BUTTON(player_vs_computer_hard), GTK_RELIEF_NONE);
     gtk_button_set_relief(GTK_BUTTON(player_vs_machine_learning), GTK_RELIEF_NONE);
-
-
-    quit= gtk_button_new_with_label("Quit");
-    g_signal_connect(quit,"clicked", G_CALLBACK(gtk_main_quit),NULL);
-
     gtk_button_set_relief(GTK_BUTTON(quit), GTK_RELIEF_NONE);
 
     gtk_container_add(GTK_CONTAINER(mainMenu),player_vs_player);
@@ -132,13 +125,19 @@ void initializeGUI()
     gtk_widget_set_name(player_vs_machine_learning,"player_vs_machine_learning");
     gtk_container_add(GTK_CONTAINER(mainMenu),quit);
     gtk_widget_set_name(quit,"quit");
-    
-    //Creating welcome page
-    header = gtk_label_new("TIC TAC TOE");
-    gtk_widget_set_name(header,"header");
-    gtk_container_add(GTK_CONTAINER(MainBox),header);
+
+    g_signal_connect(player_vs_player, "clicked", G_CALLBACK(changeGamemode), "0");
+    g_signal_connect(player_vs_computer_easy, "clicked", G_CALLBACK(changeGamemode), "1");
+    g_signal_connect(player_vs_computer_medium, "clicked", G_CALLBACK(changeGamemode), "2");
+    g_signal_connect(player_vs_computer_hard, "clicked", G_CALLBACK(changeGamemode), "3");
+    g_signal_connect(player_vs_machine_learning, "clicked", G_CALLBACK(changeGamemode), "4");
+    g_signal_connect(quit,"clicked", G_CALLBACK(gtk_main_quit),NULL);
 
     //Creating player 1,2 label
+    tttpage = gtk_box_new(GTK_ORIENTATION_VERTICAL,0);
+    gtk_container_add(GTK_CONTAINER (MainBox), tttpage);
+    gtk_widget_set_name(tttpage,"tttpage");
+
     player1 = gtk_label_new("Player 1");
     opponent = gtk_label_new("Player 2");
     gtk_container_add(GTK_CONTAINER(MainBox),player1);
@@ -182,7 +181,6 @@ void initializeGUI()
     gtk_button_set_relief(GTK_BUTTON(reset), GTK_RELIEF_NONE);
     gtk_button_set_relief(GTK_BUTTON(restart), GTK_RELIEF_NONE);
 
-    
 
     //Tic tac toe page 
     //creating elements in page ttt
@@ -250,14 +248,6 @@ void initializeGUI()
     gtk_widget_hide(reset);
     gtk_widget_hide(restart);
 
-    
-    g_signal_connect(player_vs_player, "clicked", G_CALLBACK(changeGamemode), "0");
-    g_signal_connect(player_vs_computer_easy, "clicked", G_CALLBACK(changeGamemode), "1");
-    g_signal_connect(player_vs_computer_medium, "clicked", G_CALLBACK(changeGamemode), "2");
-    g_signal_connect(player_vs_computer_hard, "clicked", G_CALLBACK(changeGamemode), "3");
-    g_signal_connect(player_vs_machine_learning, "clicked", G_CALLBACK(changeGamemode), "4");
-
-
     g_signal_connect(button1, "clicked", G_CALLBACK(playerMove), &board[0][0]);
     g_signal_connect(button2, "clicked", G_CALLBACK(playerMove), &board[0][1]);
     g_signal_connect(button3, "clicked", G_CALLBACK(playerMove), &board[0][2]);
@@ -292,7 +282,7 @@ void announceWinner(int winner, int draw)
     }
     else if (winner == 1)
     {
-        if (gamemode == 1 || gamemode == 2 || gamemode == 3)
+        if (gamemode == 1 || gamemode == 2 || gamemode == 3 || gamemode == 4)
         {
             gtk_label_set_label(GTK_LABEL(announce), "Computer wins!");
         }
