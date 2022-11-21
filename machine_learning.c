@@ -7,10 +7,10 @@
 #define TESTING_SIZE 192
 
 // Global Variables for Machine Learning, not to be accessed by other files
-int ml_ml_board[MAX_SIZE][10];
+int ml_board[MAX_SIZE][10];
+float weights[9] = {0,0,0,0,0,0,0,0,0};
 int training[TRAINING_SIZE][10];
 int testing[TESTING_SIZE][10];
-float weights[9] = {0,0,0,0,0,0,0,0,0};
 float error[10], training_error[TRAINING_SIZE];
 float learning_rate = 0.5,training_error_total = 0,testing_error_total = 0;
 
@@ -23,15 +23,17 @@ void train_data(int row);
 void updateWeights(int row);
 void test_data(int row);
 void save_weights();
+void load_weights();
 
 int main()
 {
-    create_model(); //Should only be run once and not every time we build the program.
+    load_weights();
+    // create_model(); //Should only be run once and not every time we build the program.
 }
 
 void create_model()
 {
-    load_data();    //loads data into ml_ml_board array
+    load_data();    //loads data into ml_board array
     shuffle(MAX_SIZE); //shuffles the data into random order
     split_data(); //splits the data into training and testing data
     remove("training_accuracy.dat");
@@ -75,23 +77,23 @@ void load_data()
             record[strcspn(record, "\n")] = '\0';
             if(strcmp(record,"x") == 0)
             {
-                ml_ml_board[row][col++] = player;
+                ml_board[row][col++] = player;
             }
             else if(strcmp(record,"o") == 0)
             {
-                ml_ml_board[row][col++] = computer;
+                ml_board[row][col++] = computer;
             }
             else if(strcmp(record,"b") == 0)
             {
-                ml_ml_board[row][col++] = blank;
+                ml_board[row][col++] = blank;
             }
             else if (strcmp(record,"positive") == 0)
             {
-                ml_ml_board[row][col++] = -1; //positive for player means negative for computer
+                ml_board[row][col++] = -1; //positive for player means negative for computer
             }
             else if (strcmp(record,"negative") == 0)
             {
-                ml_ml_board[row][col++] = 1;
+                ml_board[row][col++] = 1;
             }
             record = strtok(NULL,",");
         }
@@ -110,7 +112,7 @@ void split_data()
         {
             for(int j = 0; j < 10; j++)
             {
-                training[k1][j] = ml_ml_board[i][j];
+                training[k1][j] = ml_board[i][j];
             }
             k1++;
         }
@@ -118,7 +120,7 @@ void split_data()
         {
             for (int j = 0; j < 10; j++)
             {
-                testing[k2][j] = ml_ml_board[i][j];
+                testing[k2][j] = ml_board[i][j];
             }
             k2++;
         }
@@ -134,9 +136,9 @@ void shuffle(int length)
         int swap_index = rand() % length;
         for(int j = 0; j < 10; j++)
         {
-            int temp = ml_ml_board[i][j];
-            ml_ml_board[i][j] = ml_ml_board[swap_index][j];
-            ml_ml_board[swap_index][j] = temp;
+            int temp = ml_board[i][j];
+            ml_board[i][j] = ml_board[swap_index][j];
+            ml_board[swap_index][j] = temp;
         }
     }
 }
@@ -220,11 +222,105 @@ void save_weights()
     FILE *f_ptr = fopen("weights.txt","w+");
     for (unsigned i = 0; i < 9; i++)
     {
-        int written = fprintf(f_ptr, "%d, %f\n", i+1, weights[i]);
+        int written = fprintf(f_ptr, "%f,", weights[i]);
         if (written == 0)
         {
             printf("Error writing to file.");
         }
     }
     fclose(f_ptr);
+}
+
+void load_weights()
+{
+    FILE *f_ptr = fopen("weights.txt", "r");
+    char line[MAX_LINE_LENGTH];
+    if (f_ptr  == NULL)
+    {
+        printf("Error opening file!");
+        exit(1);
+    }
+
+    while(fgets(line, MAX_LINE_LENGTH, f_ptr))
+    {
+        char *record;
+        int i = 0;
+        record = strtok(line,",");
+        while(record != NULL)
+        {
+            if (atoi(record) != i)
+            {
+                weights[i] = atof(record);
+                printf("\n%f", weights[i]);
+                record = strtok(NULL,",");
+            }
+        }
+        i += 1;
+    }
+    fclose(f_ptr);
+}
+
+int evaluateML(int depth)
+{
+    int check_winner;
+    int score;
+    check_winner = checkWinner();
+    if (check_winner == -1)
+    {
+        score = -10;
+        return score;
+    }
+    else if (check_winner == 1)
+    {
+        score = 10;
+        return score
+    }
+    else
+    {
+        return 0;
+    }
+}
+
+int ml_algorithm()
+{
+    int move_val;
+
+    for (int i = 0; i < 9; i++)
+    {
+        move_val += weights[i] * 
+    }
+
+    return move_val;
+}
+
+void findBestMoveML()
+{
+    int bestVal = -1000;
+    int counter = 0;
+
+    for (int i = 0; i < 3; i++)
+    {
+        for (int j = 0; j < 3; j++)
+        {
+            if (strlen(&board[i][j]) == 0)
+            {
+                board[i][j] = COMPUTER;
+
+                int moveVal = ml_algorithm();
+                printf("\n%d", moveVal);
+
+                board[i][j] = 0;
+
+                if (moveVal > bestVal)
+                {
+                    bestMove[0] = i;
+                    bestMove[1] = j;
+                    bestVal = moveVal;
+                }
+            }
+        }
+    }
+
+    printf("The value of the best Move: %d\n\n", bestVal);
+    printf("The amount of iterations are: %d\n", counter);
 }

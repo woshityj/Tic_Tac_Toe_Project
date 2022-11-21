@@ -64,5 +64,7 @@ extern int check_draw;
 extern int alpha;
 extern int beta;
 extern int imperfect;
+extern float weights[9];
+
 
 #endif
