@@ -106,7 +106,7 @@ void initializeGUI()
     player_vs_computer_easy = gtk_button_new_with_label("Player Vs Computer(Easy)");
     player_vs_computer_medium = gtk_button_new_with_label("Player Vs Computer(Medium)");
     player_vs_computer_hard = gtk_button_new_with_label("Player Vs Computer(Hard)");
-    player_vs_machine_learning = gtk_button_new_with_label("Player Vs Machine Learning");
+    player_vs_machine_learning = gtk_button_new_with_label("Player Vs ML");
 
     gtk_button_set_relief(GTK_BUTTON(player_vs_player), GTK_RELIEF_NONE);
     gtk_button_set_relief(GTK_BUTTON(player_vs_computer_easy), GTK_RELIEF_NONE);
@@ -442,7 +442,7 @@ void changeGamemode(GtkWidget *widget, gpointer data)
         gamemode = 4;
         setAIDifficulty();
         hideMenu();
-        gtk_label_set_label(GTK_LABEL(opponent), "Machine Learning");
+        gtk_label_set_label(GTK_LABEL(opponent), "Machine");
         resetBoard();
     }
 }

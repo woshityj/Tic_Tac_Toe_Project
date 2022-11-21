@@ -114,7 +114,11 @@ void playerMove(GtkWidget *widget, gpointer data)
 
         if (check_winner == 0 && check_draw == 0)
         {
-
+            computerMove();
+            turncounter = turncounter + 1;
+            check_winner = checkWinner();
+            check_draw = draw(checkFreeSpaces());
+            announceWinner(check_winner, check_draw);
         }
     }
 

@@ -86,6 +86,21 @@
     #player_vs_computer_hard:hover{
       box-shadow: 5px 7px #17ffec;
     }
+
+    #player_vs_machine_learning{
+      font: 24px "Raleway";
+      font-size: 20px;
+      background: white;
+      border: 0 none white;
+      color: rgb(77, 74, 74);
+      margin: 1rem;
+      min-width: 200px;
+      outline-width: 0px;
+      padding: 15px;
+    }
+    #player_vs_machine_learning:hover{
+      box-shadow: 5px 7px #aa17ff;
+    }
     
     
     #quit{
