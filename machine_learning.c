@@ -289,7 +289,15 @@ int ml_algorithm()
         {
             if (strlen(&board[i][j]) == 0)
             {
-                curr_board[(i*3)+j]=board[i][j];
+                curr_board[(i*3)+j]=0;
+            }
+            else if (strcmp(&board[i][j], "O") == 0)
+            {
+                curr_board[(i*3)+j]=1;
+            }
+            else if (strcmp(&board[i][j], "X") == 0)
+            {
+                curr_board[(i*3)+j]=-1;
             }
         }
     }
