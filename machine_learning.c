@@ -1,14 +1,13 @@
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <time.h>
+#include "global.h"
 
+/* Machine Learning Variables*/
 #define MAX_LINE_LENGTH 1000
 #define MAX_SIZE 958
 #define TRAINING_SIZE 575
 #define TESTING_SIZE 383
 
-int board[MAX_SIZE][10];
+// Global Variables for Machine Learning, not to be accessed by other files
+int ml_ml_board[MAX_SIZE][10];
 int training[TRAINING_SIZE][10];
 int testing[TESTING_SIZE][10];
 float weights[9] = {0,0,0,0,0,0,0,0,0};
@@ -16,6 +15,7 @@ float error[10], training_error[TRAINING_SIZE];
 float learning_rate = 0.5,training_error_total = 0,testing_error_total = 0;
 
 // Function prototypes
+void create_model();
 void load_data();
 void shuffle(int length);
 void split_data();
@@ -23,11 +23,15 @@ void train_data(int row);
 void updateWeights(int row);
 void test_data(int row);
 void save_weights();
-void plot_data();
 
-int main(void)
+int main()
 {
-    load_data();    //loads data into board array
+    create_model(); //Should only be run once and not every time we build the program.
+}
+
+void create_model()
+{
+    load_data();    //loads data into ml_ml_board array
     shuffle(MAX_SIZE); //shuffles the data into random order
     split_data(); //splits the data into training and testing data
     remove("training_accuracy.dat");
@@ -46,18 +50,17 @@ int main(void)
     {
         test_data(j);
     }
-    float testing_MMSE = testing_error_total/TRAINING_SIZE;
+    float testing_MMSE = testing_error_total/TESTING_SIZE;
     printf("\nThe error for the testing dataset is %f",testing_MMSE);
-    //save_weights();
-    return 0;
+    save_weights();
 }
 
 void load_data()
 {
-    FILE *fptr;
+    FILE *fptr = fopen("tic-tac-toe.data", "r");
     char line[MAX_LINE_LENGTH];
     int row = 0, col = 0, player = -1, computer = 1, blank = 0;
-    if ((fptr = fopen("tic-tac-toe.data", "r")) == NULL)
+    if (fptr  == NULL)
     {
         printf("Error opening file!");
         exit(1);
@@ -72,23 +75,23 @@ void load_data()
             record[strcspn(record, "\n")] = '\0';
             if(strcmp(record,"x") == 0)
             {
-                board[row][col++] = player;
+                ml_ml_board[row][col++] = player;
             }
             else if(strcmp(record,"o") == 0)
             {
-                board[row][col++] = computer;
+                ml_ml_board[row][col++] = computer;
             }
             else if(strcmp(record,"b") == 0)
             {
-                board[row][col++] = blank;
+                ml_ml_board[row][col++] = blank;
             }
             else if (strcmp(record,"positive") == 0)
             {
-                board[row][col++] = -1; //positive for player means negative for computer
+                ml_ml_board[row][col++] = -1; //positive for player means negative for computer
             }
             else if (strcmp(record,"negative") == 0)
             {
-                board[row][col++] = 1;
+                ml_ml_board[row][col++] = 1;
             }
             record = strtok(NULL,",");
         }
@@ -107,7 +110,7 @@ void split_data()
         {
             for(int j = 0; j < 10; j++)
             {
-                training[k1][j] = board[i][j];
+                training[k1][j] = ml_ml_board[i][j];
             }
             k1++;
         }
@@ -115,7 +118,7 @@ void split_data()
         {
             for (int j = 0; j < 10; j++)
             {
-                testing[k2][j] = board[i][j];
+                testing[k2][j] = ml_ml_board[i][j];
             }
             k2++;
         }
@@ -131,9 +134,9 @@ void shuffle(int length)
         int swap_index = rand() % length;
         for(int j = 0; j < 10; j++)
         {
-            int temp = board[i][j];
-            board[i][j] = board[swap_index][j];
-            board[swap_index][j] = temp;
+            int temp = ml_ml_board[i][j];
+            ml_ml_board[i][j] = ml_ml_board[swap_index][j];
+            ml_ml_board[swap_index][j] = temp;
         }
     }
 }
@@ -146,15 +149,16 @@ void train_data(int row)
     {
         yest += weights[i] * training[row][i];
     }
+    
     if (yest > 0)
     {
         yest = 1;
     }
-    
     else
     {
-        yest = 0;
+        yest = -1;
     }
+
     float errory = yest - y;
     
     for (int j = 0; j < 10; j++)
@@ -162,21 +166,21 @@ void train_data(int row)
         if(j != 9)
         {
             int x = training[row][j];
-            error[j] = (errory*x);
+            error[j] = (errory*errory*x);
         }
         else
         {
             error[j] = errory;
-            // FILE *f_ptr = fopen("training_accuracy.dat","a");
-            // int written = fprintf(f_ptr, "%d\t%f\n",row, error[j]);
-            // if (written == 0)
-            // {
-            //     printf("Error writing to file.");
-            // }
-            // fclose(f_ptr);
             training_error_total += (errory*errory);
         }
     }
+    FILE *f_ptr = fopen("training_accuracy.dat","a");
+    int written = fprintf(f_ptr, "%d\t%f\n",row, errory);
+    if (written == 0)
+    {
+        printf("Error writing to file.");
+    }
+    fclose(f_ptr);
 }
 
 void test_data(int row)
@@ -187,16 +191,18 @@ void test_data(int row)
     {
         yest += weights[i] * testing[row][i];
     }
-    float errory = yest - y;
+    
     if (yest > 0)
     {
         yest = 1;
     }
-    
     else
     {
-        yest = 0;
+        yest = -1;
     }
+
+    float errory = yest - y;
+    
     testing_error_total += (errory*errory);
 }
 
@@ -205,16 +211,16 @@ void updateWeights(int row)
     printf("At row %d, error is %f\n",row+1,error[9]);
     for (int i = 0; i < 9; i++)
     {
-        weights[i] += (learning_rate*error[i]*training[row][i]);
+        weights[i] += (learning_rate*error[i]);
     }
 }
 
 void save_weights()
 {
-    FILE *f_ptr = fopen("weights.txt","w");
+    FILE *f_ptr = fopen("weights.txt","w+");
     for (unsigned i = 0; i < 9; i++)
     {
-        int written = fprintf(f_ptr, "Weight %d: %f\n", i+1, weights[i]);
+        int written = fprintf(f_ptr, "%d, %f\n", i+1, weights[i]);
         if (written == 0)
         {
             printf("Error writing to file.");

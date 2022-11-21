@@ -1,8 +1,6 @@
 #ifndef MINIMAX_H
 #define MINIMAX_H
 
-#include "global.h"
-
 //function declaration
 int evaluate();
 

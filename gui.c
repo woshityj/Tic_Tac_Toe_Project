@@ -1,6 +1,5 @@
 #include "global.h"
 #include "tic_tac_toe.h"
-#include "gui.h"
 #include "minimax.h"
 
 // Function Protoypes
