@@ -8,7 +8,7 @@ void initializeGUI();
 /* Declaring value to global variables */
 int turncounter = 0;
 int player_1_score = 0;
-int player_2_score = 0;
+int opponent_score = 0;
 int gamemode = 0;
 int bestMove[2] = {-1, -1};
 float aiPercentage = 0;

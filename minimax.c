@@ -2,7 +2,7 @@
 #include "tic_tac_toe.h"
 
 // Function Protoypes
-int evaluate();
+int evaluate(int depth);
 int minimax(int depth, int isMax, int alpha, int beta, int *ptr_counter);
 void findBestMove();
 int max(int num1, int num2);
@@ -23,17 +23,20 @@ int checkFreeSpaces();
 |            +10 -- If the placement of the pieces results in a win for the COMPUTER, the value +10 will be returned
 |              0 -- If the placement of the piece results in a draw, the value 0 will be returned
 *-------------------------------------------------------------------*/
-int evaluate()
+int evaluate(int depth)
 {
     int check_winner;
+    int score;
     check_winner = checkWinner();
     if (check_winner == -1)
     {
-        return -10;
+        score = -10 + depth;
+        return score;
     }
     else if (check_winner == 1)
     {
-        return +10;
+        score = 10 - depth;
+        return score;
     }
     else
     {
@@ -62,16 +65,20 @@ int evaluate()
 *-------------------------------------------------------------------*/
 int minimax(int depth, int isMax, int alpha, int beta, int *ptr_counter)
 {
-    int score, spaces_left;
+    int score;
+    int spaces_left;
+    int check_winner;
 
-    score = evaluate();
+    score = evaluate(depth);
+
+    check_winner = checkWinner();
     
-    if (score == 10)
+    if (check_winner == - 1)
     {
         return score;
     }
 
-    if (score == -10)
+    if (check_winner == 1)
     {
         return score;
     }
@@ -164,6 +171,7 @@ void findBestMove()
                 board[i][j] = COMPUTER;
 
                 int moveVal = minimax(0, 0, -1000, 1000, &counter);
+                printf("\n%d", moveVal);
 
                 board[i][j] = 0;
 
