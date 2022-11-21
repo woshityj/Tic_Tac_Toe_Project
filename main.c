@@ -1,6 +1,7 @@
 /* Libraries */
 #include "global.h"
 #include "gui.h"
+#include "machine_learning.h"
 
 /* Function Prototypes */
 void initializeGUI();
@@ -20,4 +21,5 @@ int main(int argc, char *argv[])
     gtk_init(&argc, &argv);
     initializeGUI();
     srand(time(NULL));
+    load_weights();
 }
