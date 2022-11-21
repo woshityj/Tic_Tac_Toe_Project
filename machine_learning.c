@@ -8,6 +8,7 @@
 
 // Global Variables for Machine Learning, not to be accessed by other files
 int ml_board[MAX_SIZE][10];
+int curr_board[9];
 float weights[9] = {0,0,0,0,0,0,0,0,0};
 int training[TRAINING_SIZE][10];
 int testing[TESTING_SIZE][10];
@@ -273,7 +274,7 @@ int evaluateML(int depth)
     else if (check_winner == 1)
     {
         score = 10;
-        return score
+        return score;
     }
     else
     {
@@ -285,9 +286,20 @@ int ml_algorithm()
 {
     int move_val;
 
+    for (int i = 0; i < 3; i++)
+    {
+        for (int j = 0; j < 3; j++)
+        {
+            if (strlen(&board[i][j]) == 0)
+            {
+                curr_board[(i*3)+j]=board[i][j];
+            }
+        }
+    }
+
     for (int i = 0; i < 9; i++)
     {
-        move_val += weights[i] * 
+        move_val += weights[i] * curr_board[i];
     }
 
     return move_val;
