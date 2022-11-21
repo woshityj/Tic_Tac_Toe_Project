@@ -258,27 +258,6 @@ void load_weights()
     fclose(f_ptr);
 }
 
-int evaluateML(int depth)
-{
-    int check_winner;
-    int score;
-    check_winner = checkWinner();
-    if (check_winner == -1)
-    {
-        score = -10;
-        return score;
-    }
-    else if (check_winner == 1)
-    {
-        score = 10;
-        return score;
-    }
-    else
-    {
-        return 0;
-    }
-}
-
 int ml_algorithm()
 {
     int move_val = 0;
