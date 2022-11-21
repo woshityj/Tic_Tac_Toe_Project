@@ -31,12 +31,6 @@ int ml_algorithm();
 void findBestMoveML();
 int checkWinner();
 
-int main()
-{
-    load_weights();
-    // create_model(); //Should only be run once and not every time we build the program.
-}
-
 void create_model()
 {
     load_data();    //loads data into ml_board array
