@@ -134,56 +134,51 @@ void initializeGUI()
     g_signal_connect(quit,"clicked", G_CALLBACK(gtk_main_quit),NULL);
 
     //Creating player 1,2 label
-    tttpage = gtk_box_new(GTK_ORIENTATION_VERTICAL,0);
-    gtk_container_add(GTK_CONTAINER (MainBox), tttpage);
-    gtk_widget_set_name(tttpage,"tttpage");
-
     player1 = gtk_label_new("Player 1");
     opponent = gtk_label_new("Player 2");
+    score1 = gtk_label_new("0");
+    score2 = gtk_label_new("0");
+    //Announce winner label
+    announce = gtk_label_new("Winner");
+    optionbox = gtk_box_new(GTK_ORIENTATION_HORIZONTAL,0);
+    back = gtk_button_new_with_label("Back");
+    reset = gtk_button_new_with_label("Restart");
+    restart = gtk_button_new_with_label("Reset Score");
+
     gtk_container_add(GTK_CONTAINER(MainBox),player1);
     gtk_container_add(GTK_CONTAINER(MainBox),opponent);
     gtk_widget_set_name(player1,"player1");
     gtk_widget_set_name(opponent,"player2");
 
-
-    //Create scores label
-    score1 = gtk_label_new("0");
-    score2 = gtk_label_new("0");
     gtk_container_add(GTK_CONTAINER(MainBox),score1);
     gtk_container_add(GTK_CONTAINER(MainBox),score2);
     gtk_widget_set_name(score1,"score1");
     gtk_widget_set_name(score2,"score2");
 
-
-    //Announce winner label
-    announce = gtk_label_new("Winner");
     gtk_container_add(GTK_CONTAINER(MainBox),announce);
     gtk_widget_set_name(announce,"winner");
 
-
-    optionbox = gtk_box_new(GTK_ORIENTATION_HORIZONTAL,0);
     gtk_container_add(GTK_CONTAINER(MainBox),optionbox);
     gtk_widget_set_name(optionbox,"optionbox");
+    gtk_widget_set_halign(optionbox, GTK_ALIGN_CENTER);
 
-
-    back = gtk_button_new_with_label("Back");
-    reset = gtk_button_new_with_label("Restart");
-    restart = gtk_button_new_with_label("Reset Score");
     gtk_container_add(GTK_CONTAINER(optionbox),back);
     gtk_container_add(GTK_CONTAINER(optionbox),reset);
     gtk_container_add(GTK_CONTAINER(optionbox),restart);
     gtk_widget_set_name(back,"back");
     gtk_widget_set_name(reset,"reset");
     gtk_widget_set_name(restart,"restart");
-    gtk_widget_set_halign(optionbox, GTK_ALIGN_CENTER);
 
     gtk_button_set_relief(GTK_BUTTON(back), GTK_RELIEF_NONE);
     gtk_button_set_relief(GTK_BUTTON(reset), GTK_RELIEF_NONE);
     gtk_button_set_relief(GTK_BUTTON(restart), GTK_RELIEF_NONE);
-
-
+    
+    
     //Tic tac toe page 
     //creating elements in page ttt
+    tttpage = gtk_box_new(GTK_ORIENTATION_VERTICAL,0);
+    gtk_container_add(GTK_CONTAINER (MainBox), tttpage);
+    gtk_widget_set_name(tttpage,"tttpage");
     tttgrid = gtk_grid_new();
     gtk_widget_set_name(tttgrid,"tttgrid");
     gtk_container_add(GTK_CONTAINER(tttpage),tttgrid);
