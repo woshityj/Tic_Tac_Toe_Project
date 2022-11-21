@@ -26,7 +26,6 @@ void updateWeights(int row);
 void test_data(int row);
 void save_weights();
 void load_weights();
-int evaluateML(int depth);
 int ml_algorithm();
 void findBestMoveML();
 int checkWinner();
@@ -258,27 +257,6 @@ void load_weights()
     fclose(f_ptr);
 }
 
-int evaluateML(int depth)
-{
-    int check_winner;
-    int score;
-    check_winner = checkWinner();
-    if (check_winner == -1)
-    {
-        score = -10;
-        return score;
-    }
-    else if (check_winner == 1)
-    {
-        score = 10;
-        return score;
-    }
-    else
-    {
-        return 0;
-    }
-}
-
 int ml_algorithm()
 {
     int move_val = 0;
@@ -289,7 +267,15 @@ int ml_algorithm()
         {
             if (strlen(&board[i][j]) == 0)
             {
-                curr_board[(i*3)+j]=board[i][j];
+                curr_board[(i*3)+j]=0;
+            }
+            else if (strcmp(&board[i][j], "O") == 0)
+            {
+                curr_board[(i*3)+j]=1;
+            }
+            else if (strcmp(&board[i][j], "X") == 0)
+            {
+                curr_board[(i*3)+j]=-1;
             }
         }
     }
