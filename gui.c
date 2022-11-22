@@ -68,25 +68,30 @@ void destroy(GtkWidget *widget, gpointer data)
     gtk_window_close(data);
 }
 
+/*------------------------------------------------- initializeGUI -----
+|  Function initializeGUI
+|
+|  Purpose:  This function makes use of the GTK Widgets to create the elements found on 
+|            the Main Menu Page and the Tic Tac Toe Game Page and attach a function to
+|            the buttons found on the Main Menu and Tic Tac Toe Game Page.
+|
+*-------------------------------------------------------------------*/
 void initializeGUI()
 {
  
-  
     //Creating a window and styling of window
     window =gtk_window_new(GTK_WINDOW_TOPLEVEL);
     gtk_window_set_title(GTK_WINDOW(window),"Tic Tac Toe");
     gtk_window_set_default_size(GTK_WINDOW(window),800,600);
     gtk_window_set_position(GTK_WINDOW(window),GTK_WIN_POS_CENTER);
     gtk_window_set_resizable(GTK_WINDOW(window),FALSE);
-    //gtk_window_set_decorated(GTK_WINDOW(window),FALSE);
     
-    //gtk_widget_show (MainBox);
-    //creating a MainBox container
+    //Creating a MainBox container
     MainBox = gtk_fixed_new();   
     gtk_widget_set_name(MainBox,"MainBox");
     gtk_container_add (GTK_CONTAINER (window), MainBox);
     
-    //creating box container
+    //Ccreating box container
     mainMenu = gtk_box_new(GTK_ORIENTATION_VERTICAL,0);
     tttpage = gtk_box_new(GTK_ORIENTATION_VERTICAL,0);
     gtk_container_add(GTK_CONTAINER(MainBox),mainMenu);
@@ -117,7 +122,7 @@ void initializeGUI()
     gtk_button_set_relief(GTK_BUTTON(player_vs_machine_learning), GTK_RELIEF_NONE);
     gtk_button_set_relief(GTK_BUTTON(quit), GTK_RELIEF_NONE);
 
-    //Giving Main menu Elements an id 
+    //Giving Main Menu Elements an id 
     gtk_container_add(GTK_CONTAINER(MainBox),header);
     gtk_widget_set_name(header,"header");
     gtk_container_add(GTK_CONTAINER(mainMenu),player_vs_player);
@@ -133,7 +138,7 @@ void initializeGUI()
     gtk_container_add(GTK_CONTAINER(mainMenu),quit);
     gtk_widget_set_name(quit,"quit");
     
-    //Calling functions when button is clicked
+    //Calling functions for Main Menu Buttons when button is clicked
     g_signal_connect(player_vs_player, "clicked", G_CALLBACK(changeGamemode), "0");
     g_signal_connect(player_vs_computer_easy, "clicked", G_CALLBACK(changeGamemode), "1");
     g_signal_connect(player_vs_computer_medium, "clicked", G_CALLBACK(changeGamemode), "2");
@@ -149,7 +154,7 @@ void initializeGUI()
     gtk_widget_set_name(tttgrid,"tttgrid");
     gtk_container_add(GTK_CONTAINER(tttpage),tttgrid);
     
-    //creating button for grid element
+    //Creating button for grid element
     button1 = gtk_button_new();
     button2 = gtk_button_new();
     button3 = gtk_button_new();
@@ -159,6 +164,7 @@ void initializeGUI()
     button7 = gtk_button_new();
     button8 = gtk_button_new();
     button9 = gtk_button_new();
+
     //Giving buttons an ID
     gtk_widget_set_name(button1,"button1");
     gtk_widget_set_name(button2,"button2");
@@ -280,6 +286,19 @@ void initializeGUI()
 
 }
 
+/*------------------------------------------------- announceWinner -----
+|  Function announcecWinner
+|
+|  Purpose:  Based on whether the Player or the Computer has won, we will set the appropriate label to 
+|            announce whether the Player 1 has won or the Player 2 or Computer has won.
+|            In the event whereby the game has ended in a draw, we will set the label to announce that 
+|            the game has ended in a draw and disable the buttons found on the Tic Tac Toe Board.
+|
+|  Parameters:
+|      winner -- Passes an integer of -1 or 1 to indicate whether the Player "X" has won or "O" has won and 0 if there is no winner
+|      draw -- Passes an integer of 1 or 0 to indicate whether the game has resulted in a draw
+|
+*-------------------------------------------------------------------*/
 void announceWinner(int winner, int draw)
 {
     if (winner == -1)
@@ -316,6 +335,13 @@ void announceWinner(int winner, int draw)
     }
 }
 
+/*------------------------------------------------- hidegrid -----
+|  Function hidegrid
+|
+|  Purpose:  This function would hide the GTK Widgets found on the Game Page and
+|            only display the Widget found on the Home Page
+|
+*-------------------------------------------------------------------*/
 void hidegrid()
 {
     gtk_widget_show(mainMenu);
@@ -332,6 +358,13 @@ void hidegrid()
     resetGame();
 }
 
+/*------------------------------------------------- hideMenu -----
+|  Function hideMenu
+|
+|  Purpose:  This function would hide the GTK Widgets found on the Main Menu Page and
+|            only display the Widget found on the Game Page
+|
+*-------------------------------------------------------------------*/
 void hideMenu()
 {
     gtk_widget_hide(mainMenu);
@@ -348,6 +381,14 @@ void hideMenu()
 
 }
 
+/*------------------------------------------------- resetBoard -----
+|  Function resetBoard
+|
+|  Purpose:  This funtion would reset the Global Board Array and the Global turncounter variable
+|            It will also reset the display of the buttons found on the Tic Tac Toe Board and make them
+|            clickable.
+|
+*-------------------------------------------------------------------*/
 void resetBoard()
 {
     memset(board, 0, sizeof(board));
@@ -376,6 +417,14 @@ void resetBoard()
     gtk_widget_set_sensitive (button9, TRUE);
 }
 
+/*------------------------------------------------- resetScore -----
+|  Function resetScore
+|
+|  Purpose:  This function would reset the scores of both players by setting the 
+|            Global variables of player_1_score to 0 and opponent_score to 0
+|            and reset the display of both Players to 0
+|
+*-------------------------------------------------------------------*/
 void resetScore()
 {
     gtk_label_set_label(GTK_LABEL(score1), "0");
@@ -384,12 +433,26 @@ void resetScore()
     opponent_score = 0;
 }
 
+/*------------------------------------------------- resetGame -----
+|  Function resetGame
+|
+|  Purpose:  This function would reset the board to its original state and reset
+|            the scores of both players
+|
+*-------------------------------------------------------------------*/
 void resetGame()
 {
     resetBoard();
     resetScore();
 }
 
+/*------------------------------------------------- disableButtons -----
+|  Function disableButtons
+|
+|  Purpose:  This function would disable the buttons on the Tic Tac Toe Board
+|            which is used when the game has resulted in a Draw or a Winner is declared
+|
+*-------------------------------------------------------------------*/
 void disableButtons()
 {
     gtk_widget_set_sensitive (button1, FALSE);
@@ -403,6 +466,21 @@ void disableButtons()
     gtk_widget_set_sensitive (button9, FALSE);
 }
 
+/*------------------------------------------------- changeGamemode -----
+|  Function changeGamemode
+|
+|  Purpose:  Based on the gamemode the Player has selected, it will set the approprate AI difficulty
+|            for the MiniMax Algorithm or the Machine Learning. Where it will set the appropriate name of
+|            the opponent on the user interface based on the gamemode and reset the board to ensure that
+|            the game begins from an clean state
+|
+|  Parameters:
+|      GtkWidget *widget -- Passes the Memory Address of the respective button clicked on the Tic Tac Toe Board
+|      gpointer data -- Passes the Memory Address of the data passed through the respective button clicked on the Tic Tac Toe Board.
+|                       In this case, the value of the gamemode is passed to the function, where 0 would indicate Player vs Player,
+|                       and 2, 3 and 4 indicates Player vs Computer and Player vs Machine Learning
+|
+*-------------------------------------------------------------------*/
 void changeGamemode(GtkWidget *widget, gpointer data)
 {
     char* ptr_gamemode = data;

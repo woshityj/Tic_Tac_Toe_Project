@@ -179,7 +179,6 @@ void findBestMove()
                 board[i][j] = COMPUTER;
 
                 int moveVal = minimax(0, 0, -1000, 1000, &counter);
-                printf("\n%d", moveVal);
 
                 board[i][j] = 0;
 
