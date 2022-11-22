@@ -328,6 +328,8 @@ int checkWinner()
             }
         }
     }
+
+    
     int count = 0;
     for (int col = 0; col < 3; ++col)
     {

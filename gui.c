@@ -134,12 +134,12 @@ void initializeGUI()
     gtk_widget_set_name(quit,"quit");
     
     //Calling functions when button is clicked
-    g_signal_connect(quit,"clicked", G_CALLBACK(gtk_main_quit),NULL);
     g_signal_connect(player_vs_player, "clicked", G_CALLBACK(changeGamemode), "0");
     g_signal_connect(player_vs_computer_easy, "clicked", G_CALLBACK(changeGamemode), "1");
     g_signal_connect(player_vs_computer_medium, "clicked", G_CALLBACK(changeGamemode), "2");
     g_signal_connect(player_vs_computer_hard, "clicked", G_CALLBACK(changeGamemode), "3");
     g_signal_connect(player_vs_machine_learning, "clicked", G_CALLBACK(changeGamemode), "4");
+    g_signal_connect(quit,"clicked", G_CALLBACK(gtk_main_quit),NULL);
 
 
 
@@ -275,12 +275,6 @@ void initializeGUI()
     gtk_widget_hide(restart);
 
     
-
-
-
-
-    
-
     //gtk code comes here
     gtk_main();
 
