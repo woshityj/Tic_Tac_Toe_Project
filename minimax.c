@@ -93,7 +93,7 @@ int minimax(int depth, int isMax, int alpha, int beta, int *ptr_counter)
     {
         if(depth == 3)
         {
-            return score - depth;
+            return score;
         }
     }
 
