@@ -294,7 +294,7 @@ void announceWinner(int winner, int draw)
     }
     else if (winner == 1)
     {
-        if (gamemode == 1 || gamemode == 2 || gamemode == 3)
+        if (gamemode == 1 || gamemode == 2 || gamemode == 3 || gamemode == 4)
         {
             gtk_label_set_label(GTK_LABEL(announce), "Computer wins!");
         }
