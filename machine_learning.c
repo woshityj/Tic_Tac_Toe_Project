@@ -30,6 +30,14 @@ int ml_algorithm();
 void findBestMoveML();
 int checkWinner();
 
+/*------------------------------------------------- create_model -----
+|  Function create_model
+|
+|  Purpose:  To create a Machine Learning model based on linear regression through training and then
+|            testing the model against the testing data and saving the weights afterwards.
+|
+|
+*-------------------------------------------------------------------*/
 void create_model()
 {
     load_data();    //loads data into ml_board array
@@ -56,20 +64,34 @@ void create_model()
     save_weights();
 }
 
+/*------------------------------------------------- load_data -----
+|  Function load_data
+|
+|  Purpose:  To open the dataset file called "tic-tac-toe.data" and read the data and load it
+|            into a 2-dimensional array.
+|
+|
+*-------------------------------------------------------------------*/
 void load_data()
 {
+    /* fptr is a pointer to the file "tic-tac-toe.data" */
     FILE *fptr = fopen("tic-tac-toe.data", "r");
+
     char line[MAX_LINE_LENGTH];
+
     int row = 0, col = 0, player = -1, computer = 1, blank = 0;
+    /* Check is the file has been succesfully opened, otherwise stop the program from carrying on */
     if (fptr  == NULL)
     {
         printf("Error opening file!");
         exit(1);
     }
 
+    /* Loops through the entire file and loads the data into the array line by line */
     while(fgets(line, MAX_LINE_LENGTH, fptr))
     {
         char *record;
+        /* Splits the line based on "," and stores it into record pointer */
         record = strtok(line,",");
         while(record != NULL)
         {
@@ -86,9 +108,13 @@ void load_data()
             {
                 ml_board[row][col++] = blank;
             }
+            /* 
+               As positive in this case is positive for the player, we want the model to treat this as a negative value
+               therefore we assign positive as "-1" and "1" for negative
+             */
             else if (strcmp(record,"positive") == 0)
             {
-                ml_board[row][col++] = -1; //positive for player means negative for computer
+                ml_board[row][col++] = -1; 
             }
             else if (strcmp(record,"negative") == 0)
             {
@@ -102,6 +128,16 @@ void load_data()
     fclose(fptr);
 }
 
+/*------------------------------------------------- split_data -----
+|  Function split_data
+|
+|  Purpose:  Splits the given dataset that is already loaded into the 2D array into
+|            training and testing dataset.
+|            We split the training and testing in a ratio of 80:20 as given in the
+|            project requirements.
+|
+|
+*-------------------------------------------------------------------*/
 void split_data()
 {
     int k1 = 0, k2 = 0;
@@ -126,6 +162,18 @@ void split_data()
     }
 }
 
+/*------------------------------------------------- shuffle ----------
+|  Function shuffle
+|
+|  Purpose:  As the dataset is arranged in order for postitive to negative,
+|            we will have to shuffle the dataset so that the model does not learn patterns
+|            specific only to the positives.
+|
+|
+|  Parameters:
+|      length -- Passes the length of the entire dataset that we are required to shuffle
+|
+*-------------------------------------------------------------------*/
 void shuffle(int length)
 {
     for(int i = 0; i < length; i++)
@@ -140,15 +188,30 @@ void shuffle(int length)
     }
 }
 
+/*------------------------------------------------- train_data ----------
+|  Function train_data
+|
+|  Purpose:  Training is done per row and this function trains the model and outputs an
+|            estimated y which will then be checked against the actual output.
+|            After doing so, we write this error out to file called "training_accruracy.dat"
+|            for plotting.
+|
+|  Parameters:
+|      row -- Passes the current row that will be used for training
+|
+*-------------------------------------------------------------------*/
 void train_data(int row)
 {
     float y = training[row][9];
     float yest = 0;
+
+    /* Formula to calculate estimated output based on the current state of the board */
     for (int i = 0; i < 9; i++)
     {
         yest += weights[i] * training[row][i];
     }
     
+    /* Based on the estimated output, we convert this output into a stable number */
     if (yest > 0)
     {
         yest = 1;
@@ -158,8 +221,10 @@ void train_data(int row)
         yest = -1;
     }
 
+    /* Calculating the error between the actual output and the estimated output */
     float errory = y - yest;
     
+    /* Saving the error of each square so that we are able to update the weights afterwards */
     for (int j = 0; j < 10; j++)
     {
         if(j != 9)
@@ -173,6 +238,8 @@ void train_data(int row)
             training_error_total += (errory*errory);
         }
     }
+    
+    /* File process to save the error of each row into a file for further plotting */
     FILE *f_ptr = fopen("training_accuracy.dat","a");
     int written = fprintf(f_ptr, "%d\t%f\n",row, errory);
     if (written == 0)
@@ -182,15 +249,28 @@ void train_data(int row)
     fclose(f_ptr);
 }
 
+/*------------------------------------------------- test_data ----------
+|  Function test_data
+|
+|  Purpose:  After training is done, we will need to run the model through testing
+|            to see if the model has been overfitted to the training data
+|
+|  Parameters:
+|      row -- Passes the current row that will be used for testing
+|
+*-------------------------------------------------------------------*/
 void test_data(int row)
 {
     float y = testing[row][9];
     float yest = 0;
+
+    /* Formula to calculate estimated output based on the current state of the board */
     for (int i = 0; i < 9; i++)
     {
         yest += weights[i] * testing[row][i];
     }
     
+    /* Based on the estimated output, we convert this output into a stable number */
     if (yest > 0)
     {
         yest = 1;
@@ -201,10 +281,23 @@ void test_data(int row)
     }
 
     float errory = y - yest;
-    
+    /* 
+       As we do not need to update the weights at this stage, we only need to know the total error between the actual y and
+       estimated y so that we can calculate the MMSE.
+    */
     testing_error_total += (errory*errory);
 }
 
+/*------------------------------------------------- updateWeights ----
+|  Function updateWeights
+|
+|  Purpose:  After one iteration in the training phase, we will need to update the weights.
+|            The weights are updated following the formula for wi = wi + (learing rate * errorxi).
+|
+|  Parameters:
+|      row -- Passes the current row that will be used for training
+|
+*-------------------------------------------------------------------*/
 void updateWeights(int row)
 {
     printf("At row %d, error is %f\n",row+1,error[9]);
@@ -214,6 +307,13 @@ void updateWeights(int row)
     }
 }
 
+/*------------------------------------------------- save_weights ----
+|  Function save_weights
+|
+|  Purpose:  After the training and testing phase, we are required to save the weights for future use.
+|            The weights that are stored in the array will be written to a file called "weights.txt",
+|
+*-------------------------------------------------------------------*/
 void save_weights()
 {
     FILE *f_ptr = fopen("weights.txt","w+");
@@ -228,6 +328,15 @@ void save_weights()
     fclose(f_ptr);
 }
 
+/*------------------------------------------------- load_weights ----
+|  Function load_weights
+|
+|  Purpose:  This function is used for users who want to skip the training and testing phase and just
+|            load the weights from a previously used model.
+|            This function opens the same file called "weights.txt" to load the weights into the
+|            global array weights.
+|
+*-------------------------------------------------------------------*/
 void load_weights()
 {
     FILE *f_ptr = fopen("weights.txt", "r");
@@ -257,6 +366,16 @@ void load_weights()
     fclose(f_ptr);
 }
 
+/*------------------------------------------------- ml_algorithm -----
+|  Function ml_algorithm
+|
+|  Purpose:  As the board we are currently using is a 2-dimensional array, we need to load the data into a one-dimensional
+|            array which our model is familiar with.
+|            After doing so, we will calculate the move value of the current move and return that value.
+|
+|  Returns:  move_val -- the current estimated output of the model, which tells the computer whether the move is good or bad
+|                     
+*-------------------------------------------------------------------*/
 int ml_algorithm()
 {
     int move_val = 0;
@@ -288,6 +407,14 @@ int ml_algorithm()
     return move_val;
 }
 
+/*------------------------------------------------- findBestMoveML -----
+|  Function findBestMoveML
+|
+|  Purpose:  This function will evaluate all the available moves using the Machine Learning Algorithm and 
+|            returns the best move that the COMPUTER can make to the Global Best Move Array in the form of
+|            the row and column.
+|
+*-------------------------------------------------------------------*/
 void findBestMoveML()
 {
     int bestVal = -1000;
