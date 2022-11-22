@@ -89,7 +89,7 @@ int minimax(int depth, int isMax, int alpha, int beta, int *ptr_counter)
         return 0;
     }
 
-    if (imperfect)
+    if (gamemode == 2)
     {
         if(depth == 3)
         {
