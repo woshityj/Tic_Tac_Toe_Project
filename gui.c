@@ -38,8 +38,8 @@ GtkWidget *quit;
 GtkWidget *MainBox;
 GtkWidget *tttpage;
 GtkWidget *tttgrid;
-GtkWidget *button1;
 GtkWidget *child1;
+GtkWidget *button1;
 GtkWidget *button2;
 GtkWidget *button3;
 GtkWidget *button4;
@@ -173,7 +173,7 @@ void initializeGUI()
     gtk_button_set_relief(GTK_BUTTON(reset), GTK_RELIEF_NONE);
     gtk_button_set_relief(GTK_BUTTON(restart), GTK_RELIEF_NONE);
     
-    
+
     //Tic tac toe page 
     //creating elements in page ttt
     tttpage = gtk_box_new(GTK_ORIENTATION_VERTICAL,0);
