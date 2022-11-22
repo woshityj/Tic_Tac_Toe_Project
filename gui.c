@@ -143,33 +143,6 @@ void initializeGUI()
 
 
 
-<<<<<<< HEAD
-    gtk_container_add(GTK_CONTAINER(MainBox),score1);
-    gtk_container_add(GTK_CONTAINER(MainBox),score2);
-    gtk_widget_set_name(score1,"score1");
-    gtk_widget_set_name(score2,"score2");
-
-    gtk_container_add(GTK_CONTAINER(MainBox),announce);
-    gtk_widget_set_name(announce,"winner");
-
-    gtk_container_add(GTK_CONTAINER(MainBox),optionbox);
-    gtk_widget_set_name(optionbox,"optionbox");
-    gtk_widget_set_halign(optionbox, GTK_ALIGN_CENTER);
-
-    gtk_container_add(GTK_CONTAINER(optionbox),back);
-    gtk_container_add(GTK_CONTAINER(optionbox),reset);
-    gtk_container_add(GTK_CONTAINER(optionbox),restart);
-    gtk_widget_set_name(back,"back");
-    gtk_widget_set_name(reset,"reset");
-    gtk_widget_set_name(restart,"restart");
-
-    gtk_button_set_relief(GTK_BUTTON(back), GTK_RELIEF_NONE);
-    gtk_button_set_relief(GTK_BUTTON(reset), GTK_RELIEF_NONE);
-    gtk_button_set_relief(GTK_BUTTON(restart), GTK_RELIEF_NONE);
-    
-
-=======
->>>>>>> 12c4f3cd3a361dcd6b9c67cc851e297aa83dc7cf
     //Tic tac toe page 
     //creating elements in page ttt
     tttgrid = gtk_grid_new();
@@ -458,7 +431,6 @@ void changeGamemode(GtkWidget *widget, gpointer data)
     else if (*ptr_gamemode == '2')
     {
         gamemode = 2;
-        imperfect = 1;
         setAIDifficulty();
         hideMenu();
         gtk_label_set_label(GTK_LABEL(opponent), "Medium");
