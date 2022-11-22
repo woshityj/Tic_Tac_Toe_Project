@@ -70,10 +70,10 @@ void destroy(GtkWidget *widget, gpointer data)
 
 void initializeGUI()
 {
-    // gtk_init(&argc,&argv);
+ 
   
     //Creating a window and styling of window
-    window = gtk_window_new(GTK_WINDOW_TOPLEVEL);
+    window =gtk_window_new(GTK_WINDOW_TOPLEVEL);
     gtk_window_set_title(GTK_WINDOW(window),"Tic Tac Toe");
     gtk_window_set_default_size(GTK_WINDOW(window),800,600);
     gtk_window_set_position(GTK_WINDOW(window),GTK_WIN_POS_CENTER);
@@ -82,20 +82,21 @@ void initializeGUI()
     
     //gtk_widget_show (MainBox);
     //creating a MainBox container
-    MainBox = gtk_fixed_new();
-    
+    MainBox = gtk_fixed_new();   
     gtk_widget_set_name(MainBox,"MainBox");
     gtk_container_add (GTK_CONTAINER (window), MainBox);
-
+    
     //creating box container
     mainMenu = gtk_box_new(GTK_ORIENTATION_VERTICAL,0);
+    tttpage = gtk_box_new(GTK_ORIENTATION_VERTICAL,0);
     gtk_container_add(GTK_CONTAINER(MainBox),mainMenu);
+    gtk_container_add(GTK_CONTAINER (MainBox), tttpage);
+
+    //Giving Box Elements an ID 
     gtk_widget_set_name(mainMenu,"mainMenu");
+    gtk_widget_set_name(tttpage,"tttpage");
     
-    //Creating welcome page
-    header = gtk_label_new("TIC TAC TOE");
-    gtk_widget_set_name(header,"header");
-    gtk_container_add(GTK_CONTAINER(MainBox),header);
+   
     
     //Main Menu
     //creating elements in main menu 
@@ -105,7 +106,10 @@ void initializeGUI()
     player_vs_computer_hard = gtk_button_new_with_label("Player Vs Computer(Hard)");
     player_vs_machine_learning = gtk_button_new_with_label("Player Vs ML");
     quit= gtk_button_new_with_label("Quit");
+    header = gtk_label_new("TIC TAC TOE");
+    
 
+    //Giving Buttons a border
     gtk_button_set_relief(GTK_BUTTON(player_vs_player), GTK_RELIEF_NONE);
     gtk_button_set_relief(GTK_BUTTON(player_vs_computer_easy), GTK_RELIEF_NONE);
     gtk_button_set_relief(GTK_BUTTON(player_vs_computer_medium), GTK_RELIEF_NONE);
@@ -113,6 +117,9 @@ void initializeGUI()
     gtk_button_set_relief(GTK_BUTTON(player_vs_machine_learning), GTK_RELIEF_NONE);
     gtk_button_set_relief(GTK_BUTTON(quit), GTK_RELIEF_NONE);
 
+    //Giving Main menu Elements an id 
+    gtk_container_add(GTK_CONTAINER(MainBox),header);
+    gtk_widget_set_name(header,"header");
     gtk_container_add(GTK_CONTAINER(mainMenu),player_vs_player);
     gtk_widget_set_name(player_vs_player,"player_vs_player");
     gtk_container_add(GTK_CONTAINER(mainMenu),player_vs_computer_easy);
@@ -125,31 +132,18 @@ void initializeGUI()
     gtk_widget_set_name(player_vs_machine_learning,"player_vs_machine_learning");
     gtk_container_add(GTK_CONTAINER(mainMenu),quit);
     gtk_widget_set_name(quit,"quit");
-
+    
+    //Calling functions when button is clicked
+    g_signal_connect(quit,"clicked", G_CALLBACK(gtk_main_quit),NULL);
     g_signal_connect(player_vs_player, "clicked", G_CALLBACK(changeGamemode), "0");
     g_signal_connect(player_vs_computer_easy, "clicked", G_CALLBACK(changeGamemode), "1");
     g_signal_connect(player_vs_computer_medium, "clicked", G_CALLBACK(changeGamemode), "2");
     g_signal_connect(player_vs_computer_hard, "clicked", G_CALLBACK(changeGamemode), "3");
     g_signal_connect(player_vs_machine_learning, "clicked", G_CALLBACK(changeGamemode), "4");
-    g_signal_connect(quit,"clicked", G_CALLBACK(gtk_main_quit),NULL);
 
-    //Creating player 1,2 label
-    player1 = gtk_label_new("Player 1");
-    opponent = gtk_label_new("Player 2");
-    score1 = gtk_label_new("0");
-    score2 = gtk_label_new("0");
-    //Announce winner label
-    announce = gtk_label_new("Winner");
-    optionbox = gtk_box_new(GTK_ORIENTATION_HORIZONTAL,0);
-    back = gtk_button_new_with_label("Back");
-    reset = gtk_button_new_with_label("Restart");
-    restart = gtk_button_new_with_label("Reset Score");
 
-    gtk_container_add(GTK_CONTAINER(MainBox),player1);
-    gtk_container_add(GTK_CONTAINER(MainBox),opponent);
-    gtk_widget_set_name(player1,"player1");
-    gtk_widget_set_name(opponent,"player2");
 
+<<<<<<< HEAD
     gtk_container_add(GTK_CONTAINER(MainBox),score1);
     gtk_container_add(GTK_CONTAINER(MainBox),score2);
     gtk_widget_set_name(score1,"score1");
@@ -174,16 +168,15 @@ void initializeGUI()
     gtk_button_set_relief(GTK_BUTTON(restart), GTK_RELIEF_NONE);
     
 
+=======
+>>>>>>> 12c4f3cd3a361dcd6b9c67cc851e297aa83dc7cf
     //Tic tac toe page 
     //creating elements in page ttt
-    tttpage = gtk_box_new(GTK_ORIENTATION_VERTICAL,0);
-    gtk_container_add(GTK_CONTAINER (MainBox), tttpage);
-    gtk_widget_set_name(tttpage,"tttpage");
     tttgrid = gtk_grid_new();
     gtk_widget_set_name(tttgrid,"tttgrid");
     gtk_container_add(GTK_CONTAINER(tttpage),tttgrid);
     
-
+    //creating button for grid element
     button1 = gtk_button_new();
     button2 = gtk_button_new();
     button3 = gtk_button_new();
@@ -193,7 +186,7 @@ void initializeGUI()
     button7 = gtk_button_new();
     button8 = gtk_button_new();
     button9 = gtk_button_new();
-
+    //Giving buttons an ID
     gtk_widget_set_name(button1,"button1");
     gtk_widget_set_name(button2,"button2");
     gtk_widget_set_name(button3,"button3");
@@ -204,6 +197,7 @@ void initializeGUI()
     gtk_widget_set_name(button8,"button8");
     gtk_widget_set_name(button9,"button9");
 
+    //Creating the acctual Grid with buttons
     gtk_grid_set_row_homogeneous(GTK_GRID(tttgrid),TRUE);
     gtk_grid_attach(GTK_GRID(tttgrid),button1,1,0,1,1);
     gtk_grid_attach(GTK_GRID(tttgrid),button2,2,0,1,1);
@@ -214,7 +208,7 @@ void initializeGUI()
     gtk_grid_attach(GTK_GRID(tttgrid),button7,1,2,1,1);
     gtk_grid_attach(GTK_GRID(tttgrid),button8,2,2,1,1);
     gtk_grid_attach(GTK_GRID(tttgrid),button9,3,2,1,1);
-
+    //Giving the buttons a border
     gtk_button_set_relief(GTK_BUTTON(button1), GTK_RELIEF_NONE);
     gtk_button_set_relief(GTK_BUTTON(button2), GTK_RELIEF_NONE);
     gtk_button_set_relief(GTK_BUTTON(button3), GTK_RELIEF_NONE);
@@ -224,25 +218,53 @@ void initializeGUI()
     gtk_button_set_relief(GTK_BUTTON(button7), GTK_RELIEF_NONE);
     gtk_button_set_relief(GTK_BUTTON(button8), GTK_RELIEF_NONE);
     gtk_button_set_relief(GTK_BUTTON(button9), GTK_RELIEF_NONE);
-
-    GtkCssProvider *cssProvider = gtk_css_provider_new();
-    gtk_css_provider_load_from_path(cssProvider, "themenew.css", NULL);
-    gtk_style_context_add_provider_for_screen(gdk_screen_get_default(),GTK_STYLE_PROVIDER(cssProvider),GTK_STYLE_PROVIDER_PRIORITY_USER);
     
-  
-    g_signal_connect(window,"destroy",G_CALLBACK(gtk_main_quit),NULL);
-    gtk_widget_show_all(window);
+    
+    //Creating player 1,2 label
+    player1 = gtk_label_new("Player 1");
+    opponent = gtk_label_new("Player 2");
+    gtk_container_add(GTK_CONTAINER(MainBox),player1);
+    gtk_container_add(GTK_CONTAINER(MainBox),opponent);
+    gtk_widget_set_name(player1,"player1");
+    gtk_widget_set_name(opponent,"player2");
 
-    gtk_widget_hide(tttpage);
-    gtk_widget_hide(player1);
-    gtk_widget_hide(opponent);
-    gtk_widget_hide(score1);
-    gtk_widget_hide(score2);
-    gtk_widget_hide(announce);
-    gtk_widget_hide(back);
-    gtk_widget_hide(reset);
-    gtk_widget_hide(restart);
 
+    //Create scores label
+    score1 = gtk_label_new("0");
+    score2 = gtk_label_new("0");
+    gtk_container_add(GTK_CONTAINER(MainBox),score1);
+    gtk_container_add(GTK_CONTAINER(MainBox),score2);
+    gtk_widget_set_name(score1,"score1");
+    gtk_widget_set_name(score2,"score2");
+
+
+    //Announce winner label
+    announce = gtk_label_new("Winner");
+    gtk_container_add(GTK_CONTAINER(MainBox),announce);
+    gtk_widget_set_name(announce,"winner");
+
+    //Box holding the 3 buttons
+    optionbox = gtk_box_new(GTK_ORIENTATION_HORIZONTAL,0);
+    gtk_container_add(GTK_CONTAINER(MainBox),optionbox);
+    gtk_widget_set_name(optionbox,"optionbox");
+
+    //Creating buttons to go back,restart,reset score
+    back = gtk_button_new_with_label("Back");
+    reset = gtk_button_new_with_label("Restart");
+    restart = gtk_button_new_with_label("Reset Score");
+    gtk_container_add(GTK_CONTAINER(optionbox),back);
+    gtk_container_add(GTK_CONTAINER(optionbox),reset);
+    gtk_container_add(GTK_CONTAINER(optionbox),restart);
+    gtk_widget_set_name(back,"back");
+    gtk_widget_set_name(reset,"reset");
+    gtk_widget_set_name(restart,"restart");
+    gtk_widget_set_halign(optionbox, GTK_ALIGN_CENTER);
+
+    gtk_button_set_relief(GTK_BUTTON(back), GTK_RELIEF_NONE);
+    gtk_button_set_relief(GTK_BUTTON(reset), GTK_RELIEF_NONE);
+    gtk_button_set_relief(GTK_BUTTON(restart), GTK_RELIEF_NONE);
+
+    //Giving elements in tic tac toe page a function
     g_signal_connect(button1, "clicked", G_CALLBACK(playerMove), &board[0][0]);
     g_signal_connect(button2, "clicked", G_CALLBACK(playerMove), &board[0][1]);
     g_signal_connect(button3, "clicked", G_CALLBACK(playerMove), &board[0][2]);
@@ -256,6 +278,34 @@ void initializeGUI()
     g_signal_connect(back,"clicked", G_CALLBACK(hidegrid),NULL);
     g_signal_connect(reset,"clicked", G_CALLBACK(resetBoard),NULL);
     g_signal_connect(restart,"clicked", G_CALLBACK(resetGame),NULL);
+
+
+    //Creating a link to CSS page
+    GtkCssProvider *cssProvider = gtk_css_provider_new();
+    gtk_css_provider_load_from_path(cssProvider, "themenew.css", NULL);
+    gtk_style_context_add_provider_for_screen(gdk_screen_get_default(),GTK_STYLE_PROVIDER(cssProvider),GTK_STYLE_PROVIDER_PRIORITY_USER);
+    
+  
+    g_signal_connect(window,"destroy",G_CALLBACK(gtk_main_quit),NULL);
+
+
+    //Hiding Elements when window is first called
+    gtk_widget_show_all(window);
+    gtk_widget_hide(tttpage);
+    gtk_widget_hide(player1);
+    gtk_widget_hide(opponent);
+    gtk_widget_hide(score1);
+    gtk_widget_hide(score2);
+    gtk_widget_hide(announce);
+    gtk_widget_hide(back);
+    gtk_widget_hide(reset);
+    gtk_widget_hide(restart);
+
+    
+
+
+
+
     
 
     //gtk code comes here
@@ -277,7 +327,7 @@ void announceWinner(int winner, int draw)
     }
     else if (winner == 1)
     {
-        if (gamemode == 1 || gamemode == 2 || gamemode == 3 || gamemode == 4)
+        if (gamemode == 1 || gamemode == 2 || gamemode == 3)
         {
             gtk_label_set_label(GTK_LABEL(announce), "Computer wins!");
         }
